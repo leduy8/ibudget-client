@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "iBudget",
+    "slug": "iBudget",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
