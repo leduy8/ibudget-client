@@ -24,9 +24,10 @@ import Button from "../components/Button";
 import { grey3, mainColor } from "../configs/colors";
 import { windowWidth } from "../configs/constants";
 import { textContent } from "../configs/textContent";
-import { createWallet, getWallets, getWalletsById } from "../services/common";
+import { createWallet, getWallets, getWalletsById } from "../services/wallet";
+import { formatCurrency } from "../ultils/string"
 
-const month = [
+const months = [
   {
     id: 1,
     title: "12/2021",
@@ -122,20 +123,20 @@ const Transactions = () => {
   let myList = useRef();
 
   const [selected, setSelected] = useState<any>(4);
-  const [modalVisiable, setmodalVisiable] = useState<any>(false);
+  const [modalVisiable, setModalVisiable] = useState<any>(false);
   const { token } = useSelector((state: any) => state.tokenState);
-  const [wallet_data, set_wallet_data] = useState<any>([]);
-  const [wallet, set_wallet] = useState<any>({});
+  const [walletData, setWalletData] = useState<any>([]);
+  const [wallet, setWallet] = useState<any>({});
   const [toggleAddWallet, setToggleAddWallet] = useState<any>(false);
   const [walletName, setWalletName] = useState<any>();
-  const [walletBalence, setWalletBalence] = useState<any>();
+  const [walletBalance, setWalletBalance] = useState<any>();
   const [totalBalance, setTotalBalance] = useState<any>(0);
-  const [focusWallet, setfocusWallet] = useState<any>(1);
+  const [focusWallet, setFocusWallet] = useState<any>(1);
 
   const onGetWallet = async () => {
     let totalBalenceTemp = 0;
     const walletData = await getWallets(token);
-    set_wallet_data(walletData);
+    setWalletData(walletData);
     for (let i = 0; i < walletData?.wallets.length; i++) {
       totalBalenceTemp = totalBalenceTemp + walletData.wallets[i].balance;
     }
@@ -144,13 +145,13 @@ const Transactions = () => {
 
   const onGetWalletById = async (id) => {
     const walletData = await getWalletsById(token, id);
-    set_wallet(walletData);
-    setmodalVisiable(!modalVisiable);
+    setWallet(walletData);
+    setModalVisiable(!modalVisiable);
   };
 
   const onCreateWallet = async () => {
     const walletData = await createWallet(
-      { name: walletName, balance: walletBalence },
+      { name: walletName, balance: walletBalance },
       token
     );
     if (walletData) {
@@ -169,15 +170,15 @@ const Transactions = () => {
       onPress={() => {
         myList.current.scrollToIndex({
           animated: true,
-          index: month.indexOf(item) === 0 ? 0 : month.indexOf(item) - 1,
+          index: months.indexOf(item) === 0 ? 0 : months.indexOf(item) - 1,
         });
-        setSelected(month.indexOf(item));
+        setSelected(months.indexOf(item));
       }}
     >
       <Text
         style={[
           { fontSize: 15, color: "#BDBDBD" },
-          selected === month.indexOf(item) && { color: "#000" },
+          selected === months.indexOf(item) && { color: "#000" },
         ]}
       >
         {item.title}
@@ -188,12 +189,12 @@ const Transactions = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header
-        onPress={() => setmodalVisiable(!modalVisiable)}
-        balance={wallet.balance}
+        onPress={() => setModalVisiable(!modalVisiable)}
+        balance={formatCurrency(wallet.balance)}
       />
       <View style={styles.v_month_container}>
         <FlatList
-          data={month}
+          data={months}
           ref={myList}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
@@ -205,7 +206,7 @@ const Transactions = () => {
             const wait = new Promise((resolve) => setTimeout(resolve, 500));
             wait.then(() => {
               myList.current?.scrollToIndex({
-                index: month.indexOf(item),
+                index: months.indexOf(item),
                 animated: true,
               });
             });
@@ -240,7 +241,7 @@ const Transactions = () => {
         transparent={true}
         visible={modalVisiable}
         onRequestClose={() => {
-          setmodalVisiable(!modalVisiable);
+          setModalVisiable(!modalVisiable);
         }}
       >
         <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5" }}>
@@ -257,7 +258,7 @@ const Transactions = () => {
           >
             <Text
               style={{ position: "absolute", left: 12, top: 10 }}
-              onPress={() => setmodalVisiable(false)}
+              onPress={() => setModalVisiable(false)}
             >
               Close
             </Text>
@@ -284,31 +285,56 @@ const Transactions = () => {
             />
             <View>
               <Text style={{ fontSize: 20, fontWeight: "bold" }}>Total</Text>
-              <Text>{totalBalance} đ</Text>
+              <Text>{formatCurrency(totalBalance)} đ</Text>
             </View>
           </View>
 
-          <Text style={{ marginBottom: 10, marginLeft: 15 }}>
-            INCLUDED IN TOTAL
-          </Text>
-          <View
-            style={{
-              backgroundColor: "#fff",
-              flexDirection: "row",
-              alignItems: "center",
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-            }}
-          >
-            <Image
-              style={{ height: 40, width: 40, marginRight: 20 }}
-              source={require("../assets/icons/ic_color_wallet.png")}
-            />
+          <View>
+            <Text style={{ marginBottom: 10, marginLeft: 15 }}>
+              INCLUDED IN TOTAL
+            </Text>
             <View>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Total</Text>
-              <Text>{totalBalance} đ</Text>
+                {walletData?.wallets
+                  ? walletData?.wallets.map((item, index) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          onGetWalletById(item.id);
+                        }}
+                        key={index}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          backgroundColor: "#fff",
+                          marginBottom: 0,
+                          paddingVertical: 15,
+                          paddingHorizontal: 5,
+                          borderBottomWidth: 1,
+                          borderBottomColor: "#eee"
+                        }}
+                      >
+                        <View
+                          style={{
+                            backgroundColor: "#fff",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            paddingHorizontal: 15,
+                            paddingVertical: 10,
+                          }}
+                        >
+                          <Image
+                            style={{ height: 40, width: 40, marginRight: 20 }}
+                            source={require("../assets/icons/ic_color_wallet.png")}
+                          />
+                          <View>
+                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
+                            <Text>{formatCurrency(item.balance)} đ</Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    ))
+                  : null}
+              </View>
             </View>
-          </View>
 
           <View style={{ paddingTop: 20 }}>
             <Button
@@ -329,13 +355,16 @@ const Transactions = () => {
                   style={styles.inputField}
                   placeholderTextColor="#707070"
                   placeholder={"Balance"}
-                  value={walletBalence}
-                  onChangeText={(text) => setWalletBalence(text)}
+                  keyboardType="numeric"
+                  value={walletBalance}
+                  onChangeText={(text) => setWalletBalance(text)}
                 ></TextInput>
 
                 <TouchableOpacity
                   onPress={() => {
                     onCreateWallet();
+                    setWalletName("")
+                    setWalletBalance("")
                   }}
                   style={{
                     backgroundColor: "#2DB84C",
@@ -352,48 +381,6 @@ const Transactions = () => {
                 </TouchableOpacity>
               </View>
             ) : null}
-            <Button
-              iconName={require("../assets/icons/ic_link.png")}
-              buttonName={"Link to services"}
-            />
-          </View>
-          <View>
-            <Text
-              style={{
-                marginTop: 20,
-                marginLeft: 20,
-                fontSize: 20,
-                fontWeight: "bold",
-                marginBottom: 10,
-              }}
-            >
-              Your Wallet
-            </Text>
-            <View>
-              {wallet_data?.wallets
-                ? wallet_data?.wallets.map((item, index) => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        onGetWalletById(item.id);
-                      }}
-                      key={index}
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        backgroundColor: "#fff",
-                        marginBottom: 10,
-                        paddingVertical: 20,
-                        marginHorizontal: 15,
-                        borderRadius: 20,
-                        paddingHorizontal: 10,
-                      }}
-                    >
-                      <Text>{item.name}: </Text>
-                      <Text>{item.balance}đ</Text>
-                    </TouchableOpacity>
-                  ))
-                : null}
-            </View>
           </View>
         </ScrollView>
       </Modal>

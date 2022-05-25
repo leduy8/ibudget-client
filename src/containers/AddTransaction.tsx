@@ -19,15 +19,15 @@ import {
 import { useSelector } from "react-redux";
 import Button from "../components/Button";
 import { grey1, grey3 } from "../configs/colors";
-import { getCategories } from "../services/common";
+import { getCategories } from "../services/category";
 
 const AddTransaction = () => {
   const [money, setMoney] = useState<any>(0);
   const [categories, setCategories] = useState<any>();
   const [categoryFocus, setCategoryFocus] = useState<any>(categories);
-  const [toggleCategory, settoggleCategory] = useState<any>(false);
+  const [toggleCategory, setToggleCategory] = useState<any>(false);
   const { token } = useSelector((state: any) => state.tokenState);
-  const [modalVisiable, setmodalVisiable] = useState<any>(false);
+  const [modalVisiable, setModalVisiable] = useState<any>(false);
 
   const onGetCategories = async () => {
     const temp = await getCategories(token);
@@ -88,7 +88,7 @@ const AddTransaction = () => {
         <Button
           buttonName={categoryFocus?.name}
           iconName={require("../assets/icons/ic_category.png")}
-          onPress={() => setmodalVisiable(!modalVisiable)}
+          onPress={() => setModalVisiable(!modalVisiable)}
         />
 
         <Button
@@ -109,7 +109,7 @@ const AddTransaction = () => {
         transparent={true}
         visible={modalVisiable}
         onRequestClose={() => {
-          setmodalVisiable(!modalVisiable);
+          setModalVisiable(!modalVisiable);
         }}
       >
         <View style={styles.container}>
@@ -126,7 +126,7 @@ const AddTransaction = () => {
           >
             <Text
               style={{ position: "absolute", left: 12, top: 10 }}
-              onPress={() => setmodalVisiable(false)}
+              onPress={() => setModalVisiable(false)}
             >
               Close
             </Text>
@@ -150,7 +150,7 @@ const AddTransaction = () => {
               {categories?.categories.map((item, index) => (
                 <TouchableOpacity
                   onPress={() => {
-                    setCategoryFocus(item), setmodalVisiable(!modalVisiable);
+                    setCategoryFocus(item), setModalVisiable(!modalVisiable);
                   }}
                   key={index}
                   style={{
