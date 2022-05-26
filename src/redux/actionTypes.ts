@@ -1,4 +1,4 @@
-export enum EnumWriteAnAnswer {
+export enum EnumActionType {
   //token
   SET_TOKEN = "SET_TOKEN", 
   DELETE_TOKEN = "DELETE_TOKEN",

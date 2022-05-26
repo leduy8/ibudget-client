@@ -57,12 +57,6 @@ const Account = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* <View style={styles.v_header}>
-          <Text style={{ fontSize: 30, fontWeight: "bold" }}>
-            {textContent.ACCOUNT.MORE}
-          </Text>
-        </View> */}
-
         <View style={styles.v_account_detail}>
           <View style={styles.v_avatar}>
             <Text style={{fontSize: 40, color: '#FFF', fontWeight: 'bold'}}>{getName(user?.name)}</Text>
@@ -81,10 +75,13 @@ const Account = () => {
           iconName={require("../assets/icons/ic_wallet.png")}
           buttonName={textContent.ACCOUNT.MY_WALLET}
         />
-
         <Button
           iconName={require("../assets/icons/ic_debt.png")}
           buttonName={textContent.ACCOUNT.DEBTS}
+        />
+        <Button
+          iconName={require("../assets/icons/ic_loan.png")}
+          buttonName={textContent.ACCOUNT.LOANS}
         />
         <Button
           iconName={require("../assets/icons/ic_ask.png")}

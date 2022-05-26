@@ -1,4 +1,4 @@
-import { EnumWriteAnAnswer } from "./actionTypes";
+import { EnumActionType } from "./actionTypes";
 
 const initValue = {
     user: null,
@@ -6,12 +6,12 @@ const initValue = {
 
 const user = (state = initValue, action: any) => {
   switch (action.type) {
-    case EnumWriteAnAnswer.SET_USER: 
+    case EnumActionType.SET_USER: 
     return {
       ...state,
       user: action.user
     }
-    case EnumWriteAnAnswer.DELETE_USER: 
+    case EnumActionType.DELETE_USER: 
     return {
       ...state,
       user: null,

@@ -24,7 +24,7 @@ import Button from "../components/Button";
 import { grey3, mainColor } from "../configs/colors";
 import { windowWidth } from "../configs/constants";
 import { textContent } from "../configs/textContent";
-import { createWallet, getWallets, getWalletsById } from "../services/wallet";
+import { createWallet, getWallets, getWalletById } from "../services/wallet";
 import { formatCurrency } from "../ultils/string"
 
 const months = [
@@ -133,18 +133,18 @@ const Transactions = () => {
   const [totalBalance, setTotalBalance] = useState<any>(0);
   const [focusWallet, setFocusWallet] = useState<any>(1);
 
-  const onGetWallet = async () => {
-    let totalBalenceTemp = 0;
+  const onGetWallets = async () => {
+    let totalBalanceTemp = 0;
     const walletData = await getWallets(token);
     setWalletData(walletData);
     for (let i = 0; i < walletData?.wallets.length; i++) {
-      totalBalenceTemp = totalBalenceTemp + walletData.wallets[i].balance;
+      totalBalanceTemp = totalBalanceTemp + walletData.wallets[i].balance;
     }
-    setTotalBalance(totalBalenceTemp);
+    setTotalBalance(totalBalanceTemp);
   };
 
   const onGetWalletById = async (id) => {
-    const walletData = await getWalletsById(token, id);
+    const walletData = await getWalletById(token, id);
     setWallet(walletData);
     setModalVisiable(!modalVisiable);
   };
@@ -155,13 +155,13 @@ const Transactions = () => {
       token
     );
     if (walletData) {
-      onGetWallet();
+      onGetWallets();
       setToggleAddWallet(!toggleAddWallet);
     }
   };
 
   useEffect(() => {
-    onGetWallet();
+    onGetWallets();
   }, []);
 
   const renderItem = ({ item }) => (
