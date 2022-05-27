@@ -24,6 +24,7 @@ import { setUser } from "../../redux/actions/userAction";
 import { login } from "../../services/auth";
 import { getUser } from "./../../services/auth";
 import { useSelector } from "react-redux";
+import { mainColor, placeholderTextColor } from "../../configs/colors";
 
 const Login = () => {
   const { navigate } = useNavigation();
@@ -96,7 +97,7 @@ const Login = () => {
       <View style={styles.textInput}>
         <TextInput
           style={styles.inputField}
-          placeholderTextColor="#707070"
+          placeholderTextColor={placeholderTextColor}
           placeholder={textContent.SIGNIN_SIGNUP.USERNAME}
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -106,7 +107,7 @@ const Login = () => {
       <View style={styles.textInput}>
         <TextInput
           style={styles.inputField}
-          placeholderTextColor="#707070"
+          placeholderTextColor={placeholderTextColor}
           secureTextEntry={visiblePassword}
           placeholder={textContent.SIGNIN_SIGNUP.PASSWORD}
           value={password}
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#EAEAEA",
     borderRadius: 10,
     paddingVertical: 20,
-    color: "#707070",
+    color: placeholderTextColor,
     height: 40,
     alignItems: "center",
     marginHorizontal: 40,
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
   bt_login: {
     height: 40,
     marginHorizontal: 40,
-    backgroundColor: "#2DB84C",
+    backgroundColor: mainColor,
     borderRadius: 5,
     marginTop: 15,
     alignItems: "center",
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   },
 
   txt_register: {
-    color: "#2DB84C",
+    color: mainColor,
     fontSize: 15,
     fontWeight: "600",
   },

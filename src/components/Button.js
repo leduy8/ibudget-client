@@ -3,15 +3,15 @@ import react from "react";
 import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 
 export default function Button(props) {
-  const { onPress, iconName, buttonName } = props;
+  const { onPress, iconName, buttonName, customStylesContainer, customStylesText } = props;
   return (
-    <TouchableOpacity style={styles.v_account_item} onPress={onPress}>
-      <Image style={styles.icon} source={iconName} />
-      <Text style={styles.txt_account_item}>{buttonName}</Text>
-      <Image
+    <TouchableOpacity style={[styles.v_account_item, customStylesContainer]} onPress={onPress}>
+      {iconName ? <Image style={styles.icon} source={iconName} /> : null}
+      <Text style={[styles.txt_account_item, customStylesText]}>{buttonName}</Text>
+      {iconName ? <Image
         style={[styles.icon, styles.margin_right]}
         source={require("../assets/icons/ic_arrow_right.png")}
-      />
+      /> : null}
     </TouchableOpacity>
   );
 }

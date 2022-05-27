@@ -21,7 +21,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { Border } from "victory-native";
 import Button from "../components/Button";
-import { grey3, mainColor } from "../configs/colors";
+import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
 import { windowWidth } from "../configs/constants";
 import { textContent } from "../configs/textContent";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
@@ -346,14 +346,14 @@ const Transactions = () => {
               <View style={{ paddingBottom: 20 }}>
                 <TextInput
                   style={styles.inputField}
-                  placeholderTextColor="#707070"
+                  placeholderTextColor={placeholderTextColor}
                   placeholder={"Wallet name"}
                   value={walletName}
                   onChangeText={(text) => setWalletName(text)}
                 ></TextInput>
                 <TextInput
                   style={styles.inputField}
-                  placeholderTextColor="#707070"
+                  placeholderTextColor={placeholderTextColor}
                   placeholder={"Balance"}
                   keyboardType="numeric"
                   value={walletBalance}
@@ -367,7 +367,7 @@ const Transactions = () => {
                     setWalletBalance("")
                   }}
                   style={{
-                    backgroundColor: "#2DB84C",
+                    backgroundColor: mainColor,
                     padding: 10,
                     width: 100,
                     alignSelf: "center",

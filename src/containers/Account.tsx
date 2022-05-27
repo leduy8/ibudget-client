@@ -66,6 +66,7 @@ const Account = () => {
         <Button
           iconName={require("../assets/icons/ic_user.png")}
           buttonName={textContent.ACCOUNT.MY_ACCOUNT}
+          onPress={() => navigate(Routes.AccountDetails)}
         />
 
         <Bt_upgrade />

@@ -26,6 +26,16 @@ export const textContent = {
     PLANNING: {
         PLANNING: "Planning",
         BUDGETS: "Budgets",
-    }
+    },
+
+    ACCOUNT_DETAILS: {
+        CHANGE_PASSWORD: "Change password"
+    },
+
+    CHANGE_PASSWORD: {
+        NEW_PASSWORD: "New password",
+        CONFIRM_PASSWORD: "Confirm password",
+        CHANGE_PASSWORD: "Change password",
+    },
   };
   

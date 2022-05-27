@@ -7,6 +7,7 @@ import Report from "../containers/Report";
 import Planning from "../containers/Planning";
 import Account from "../containers/Account";
 import AddTransaction from "../containers/AddTransaction";
+import { mainColor } from "../configs/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +25,7 @@ const CustomQrScanButton = ({ children, onPress }) => (
         width: 50,
         height: 50,
         borderRadius: 30,
-        backgroundColor: "#2DB84C",
+        backgroundColor: mainColor,
         marginBottom: 30,
       }}
     >

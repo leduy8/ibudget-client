@@ -7,7 +7,9 @@ const Routes = {
     Account: "Account",
     MainTab: "MainTab",
     AddTransaction: "AddTransaction",
-    WalletList: "WalletList"
+    WalletList: "WalletList",
+    AccountDetails: "AccountDetails",
+    ChangePassword: "ChangePassword",
 };
 
 export default Routes;

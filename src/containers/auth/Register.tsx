@@ -17,6 +17,7 @@ import {
   Modal,
 } from "react-native";
 import Loading from "../../components/Loading";
+import { placeholderTextColor } from "../../configs/colors";
 import Routes from "../../configs/routes";
 import { textContent } from "../../configs/textContent";
 import { reigster } from "../../services/auth";
@@ -96,7 +97,7 @@ const Register = () => {
       <View style={styles.textInput}>
         <TextInput
           style={styles.inputField}
-          placeholderTextColor="#707070"
+          placeholderTextColor={placeholderTextColor}
           placeholder={textContent.SIGNIN_SIGNUP.USERNAME}
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -106,7 +107,7 @@ const Register = () => {
       <View style={styles.textInput}>
         <TextInput
           style={styles.inputField}
-          placeholderTextColor="#707070"
+          placeholderTextColor={placeholderTextColor}
           secureTextEntry={visiblePassword}
           placeholder={textContent.SIGNIN_SIGNUP.PASSWORD}
           value={password}
@@ -136,7 +137,7 @@ const Register = () => {
       <View style={styles.textInput}>
         <TextInput
           style={styles.inputField}
-          placeholderTextColor="#707070"
+          placeholderTextColor={placeholderTextColor}
           placeholder={textContent.SIGNIN_SIGNUP.NAME}
           value={name}
           onChangeText={(text) => setName(text)}
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#EAEAEA",
     borderRadius: 10,
     paddingVertical: 20,
-    color: "#707070",
+    color: placeholderTextColor,
     height: 40,
     alignItems: "center",
     marginHorizontal: 40,
