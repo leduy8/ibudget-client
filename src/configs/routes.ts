@@ -5,8 +5,9 @@ const Routes = {
     Report: "Report",
     Planning: "Planning",
     Account: "Account",
-    Maintab: "Maintab",
+    MainTab: "MainTab",
     AddTransaction: "AddTransaction",
+    WalletList: "WalletList"
 };
 
 export default Routes;

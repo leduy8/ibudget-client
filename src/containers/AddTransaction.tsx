@@ -19,9 +19,11 @@ import {
 import { useSelector } from "react-redux";
 import Button from "../components/Button";
 import { grey1, grey3 } from "../configs/colors";
+import Routes from "../configs/routes";
 import { getCategories } from "../services/category";
 
 const AddTransaction = () => {
+  const { navigate } = useNavigation();
   const [money, setMoney] = useState<any>(0);
   const [categories, setCategories] = useState<any>();
   const [categoryFocus, setCategoryFocus] = useState<any>(categories);
@@ -46,6 +48,17 @@ const AddTransaction = () => {
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>
           Add Transactions
         </Text>
+        <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
+          <TouchableOpacity
+            style={{ backgroundColor: "#fff", padding: 8, borderRadius: 30 }}
+            onPress={() => navigate(Routes.Transactions)}
+          >
+            <Image
+              style={styles.icon}
+              source={require("../assets/icons/ic_arrow_left.png")}
+            />
+          </TouchableOpacity>
+        </View>
         <Text style={{ position: "absolute", right: 0, paddingRight: 15 }}>
           Save
         </Text>
@@ -226,11 +239,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  icon: {
-    height: 20,
-    width: 20,
-    marginRight: 10,
-    tintColor: grey1,
+  icon: { 
+    height: 15, 
+    width: 15, 
+    resizeMode: "contain" 
   },
 
   margin_right: { position: "absolute", right: 0, tintColor: grey3 },

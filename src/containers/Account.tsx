@@ -47,7 +47,6 @@ const Account = () => {
 
   const getName = (name: any) => {
     if (name != undefined && name != null && name != {}) {
-      // console.log(name);
       var values = name.split(" ");
       var letter = values[values.length - 1].charAt(0);
       return letter;
@@ -74,6 +73,7 @@ const Account = () => {
         <Button
           iconName={require("../assets/icons/ic_wallet.png")}
           buttonName={textContent.ACCOUNT.MY_WALLET}
+          onPress={() => navigate(Routes.WalletList)}
         />
         <Button
           iconName={require("../assets/icons/ic_debt.png")}
