@@ -17,7 +17,7 @@ import {
   Modal,
 } from "react-native";
 import Loading from "../../components/Loading";
-import { placeholderTextColor } from "../../configs/colors";
+import { mainColor, placeholderTextColor } from "../../configs/colors";
 import Routes from "../../configs/routes";
 import { textContent } from "../../configs/textContent";
 import { reigster } from "../../services/auth";
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   bt_login: {
     height: 40,
     marginHorizontal: 40,
-    backgroundColor: "#2DB84C",
+    backgroundColor: mainColor,
     borderRadius: 5,
     marginTop: 15,
     alignItems: "center",
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
 
   txt_register: {
-    color: "#2DB84C",
+    color: mainColor,
     fontSize: 15,
     fontWeight: "600",
   },

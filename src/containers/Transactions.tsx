@@ -31,7 +31,7 @@ const Header = (props) => {
   const { onPress, balance } = props;
 
   return (
-    <View style={styles.v_header}>
+    <SafeAreaView style={styles.v_header}>
       <View style={styles.v_wallet}>
         <TouchableOpacity
           style={{ backgroundColor: "#364E5C", padding: 8, borderRadius: 30 }}
@@ -88,7 +88,7 @@ const Header = (props) => {
           />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -219,7 +219,7 @@ const Transactions = () => {
           setModalVisiable(!modalVisiable);
         }}
       >
-        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5" }}>
+        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: 16 }}>
           <View
             style={{
               flexDirection: "row",
