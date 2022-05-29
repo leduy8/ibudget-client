@@ -78,8 +78,12 @@ const Register = () => {
         name: name,
       });
       console.log(data);
-      if (data?.access_token) {
+      if (data?.message === "User has been created successfully") {
         Alert.alert("User has created successfully");
+        setUsername("");
+        setPassword("");
+        setName("");
+        navigate(Routes.Login);
       } else if (data?.error_message) {
         setValidateRegister({
           ...validateLogin,

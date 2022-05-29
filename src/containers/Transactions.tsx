@@ -27,33 +27,6 @@ import { textContent } from "../configs/textContent";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
 import { formatCurrency } from "../ultils/string"
 
-const months = [
-  {
-    id: 1,
-    title: "12/2021",
-  },
-  {
-    id: 2,
-    title: "01/2022",
-  },
-  {
-    id: 3,
-    title: "02/2022",
-  },
-  {
-    id: 4,
-    title: "LAST MONTH",
-  },
-  {
-    id: 5,
-    title: "THIS MONTH",
-  },
-  {
-    id: 6,
-    title: "FUTURE",
-  },
-];
-
 const Header = (props) => {
   const { onPress, balance } = props;
 
@@ -122,9 +95,10 @@ const Header = (props) => {
 const Transactions = () => {
   let myList = useRef();
 
-  const [selected, setSelected] = useState<any>(4);
+  const [selected, setSelected] = useState<any>(3);
   const [modalVisiable, setModalVisiable] = useState<any>(false);
   const { token } = useSelector((state: any) => state.tokenState);
+  const { dateRange } = useSelector((state: any) => state.dateRangeState);
   const [walletData, setWalletData] = useState<any>([]);
   const [wallet, setWallet] = useState<any>({});
   const [toggleAddWallet, setToggleAddWallet] = useState<any>(false);
@@ -162,6 +136,7 @@ const Transactions = () => {
 
   useEffect(() => {
     onGetWallets();
+    // console.log(`dateRange = ${dateRange}`);
   }, []);
 
   const renderItem = ({ item }) => (
@@ -170,15 +145,15 @@ const Transactions = () => {
       onPress={() => {
         myList.current.scrollToIndex({
           animated: true,
-          index: months.indexOf(item) === 0 ? 0 : months.indexOf(item) - 1,
+          index: dateRange.indexOf(item) === 0 ? 0 : dateRange.indexOf(item) - 1,
         });
-        setSelected(months.indexOf(item));
+        setSelected(dateRange.indexOf(item));
       }}
     >
       <Text
         style={[
           { fontSize: 15, color: "#BDBDBD" },
-          selected === months.indexOf(item) && { color: "#000" },
+          selected === dateRange.indexOf(item) && { color: "#000" },
         ]}
       >
         {item.title}
@@ -194,7 +169,7 @@ const Transactions = () => {
       />
       <View style={styles.v_month_container}>
         <FlatList
-          data={months}
+          data={dateRange}
           ref={myList}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
@@ -206,7 +181,7 @@ const Transactions = () => {
             const wait = new Promise((resolve) => setTimeout(resolve, 500));
             wait.then(() => {
               myList.current?.scrollToIndex({
-                index: months.indexOf(item),
+                index: dateRange.indexOf(item),
                 animated: true,
               });
             });

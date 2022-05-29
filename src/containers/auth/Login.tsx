@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,13 +7,7 @@ import {
   Image,
   TextInput,
   Text,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
   SafeAreaView,
-  Alert,
   Modal,
 } from "react-native";
 import Loading from "../../components/Loading";
@@ -23,8 +17,9 @@ import { setToken } from "../../redux/actions/tokenAction";
 import { setUser } from "../../redux/actions/userAction";
 import { login } from "../../services/auth";
 import { getUser } from "./../../services/auth";
-import { useSelector } from "react-redux";
 import { mainColor, placeholderTextColor } from "../../configs/colors";
+import { setDateRange } from "../../redux/actions/dateRangeAction";
+import { getMonthsAndNBefore } from "../../ultils/date";
 
 const Login = () => {
   const { navigate } = useNavigation();
@@ -77,6 +72,7 @@ const Login = () => {
         if (!userData?.error_message) {
           setUser(userData);
         }
+        setDateRange(getMonthsAndNBefore(4));
       } else if (data?.error_message) {
         setTurnOnLoading(false);
         setValidateRegister({

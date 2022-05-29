@@ -9,7 +9,7 @@ import Button from "../components/Button";
 import { textContent } from "../configs/textContent";
 import { TextInput } from "react-native-gesture-handler";
 import { changePassword } from "../services/password";
-import alertPopUp from "../components/AlertPopup";
+import alertPopUp from "../components/AlertPopUp";
 
 const ChangePassword = (props) => {
     const { token } = useSelector((state: any) => state.tokenState);
