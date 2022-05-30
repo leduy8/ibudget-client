@@ -10,6 +10,7 @@ const Routes = {
     WalletList: "WalletList",
     AccountDetails: "AccountDetails",
     ChangePassword: "ChangePassword",
+    Learning: "Learning",
 };
 
 export default Routes;

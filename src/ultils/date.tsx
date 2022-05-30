@@ -44,3 +44,12 @@ export function getMonthsAndNBefore(n=3) {
 
     return months;
 }
+
+export function getDateJsonFormat(date: string) {
+    return date.split("T")[0];
+}
+
+export function toDisplayDate(jsonDate: string) {
+    const dateParts = jsonDate.split("-");
+    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+}

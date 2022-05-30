@@ -16,26 +16,52 @@ import {
   ScrollView,
   Modal,
 } from "react-native";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import { useSelector } from "react-redux";
 import Button from "../components/Button";
 import { grey1, grey3 } from "../configs/colors";
 import Routes from "../configs/routes";
 import { getCategories } from "../services/category";
+import { getWalletById } from "../services/wallet";
+import { getDateJsonFormat, toDisplayDate } from "../ultils/date";
+import { categoryIconsMapper, formatCurrency } from "../ultils/string";
 
 const AddTransaction = () => {
   const { navigate } = useNavigation();
+  const { token } = useSelector((state: any) => state.tokenState);
+  const { walletList } = useSelector((state: any) => state.walletListState);
   const [money, setMoney] = useState<any>(0);
   const [categories, setCategories] = useState<any>();
-  const [categoryFocus, setCategoryFocus] = useState<any>(categories);
-  const [toggleCategory, setToggleCategory] = useState<any>(false);
-  const { token } = useSelector((state: any) => state.tokenState);
-  const [modalVisiable, setModalVisiable] = useState<any>(false);
+  const [focusCategory, setFocusCategory] = useState<any>(categories);
+  const [focusCategoryIcon, setFocusCategoryIcon] = useState<any>();
+  const [note, setNote] = useState("");
+  const [datePicked, setDatePicked] = useState(getDateJsonFormat(new Date().toISOString()));
+  const [walletPicked, setWalletPicked] = useState<any>();
+  const [categoryModalVisible, setCategoryModalVisible] = useState<any>(false);
+  const [datetimePickerModalVisible, setDatetimePickerModalVisible] = useState<any>(false);
+  const [walletModalVisible, setWalletModalVisible] = useState<any>(false);
 
   const onGetCategories = async () => {
     const temp = await getCategories(token);
     if (temp?.categories) {
+      temp.categories.shift();
       setCategories(temp);
     }
+  };
+
+  const onToggleDatetimePicker = () => {
+    setDatetimePickerModalVisible(!datetimePickerModalVisible);
+  }
+
+  const onHandleDatetimePicked = date => {
+    setDatePicked(getDateJsonFormat(JSON.stringify(date).split("\"")[1]));
+    setDatetimePickerModalVisible(false);
+  };
+
+  const onGetWalletById = async (id) => {
+    const temp: any = await getWalletById(token, id);
+    setWalletPicked(temp);
+    setWalletModalVisible(!walletModalVisible);
   };
 
   useEffect(() => {
@@ -70,9 +96,9 @@ const AddTransaction = () => {
             Amount
           </Text>
           <View style={styles.v_money}>
-            <TouchableOpacity style={styles.bt_money}>
+            <View style={styles.bt_money}>
               <Text>VND</Text>
-            </TouchableOpacity>
+            </View>
             <View style={styles.v_input_money}>
               <TextInput
                 style={styles.txt_input_money}
@@ -84,24 +110,10 @@ const AddTransaction = () => {
           </View>
         </View>
 
-        {/* <View style={styles.v_category}>
-          <Image
-            style={{ height: 30, width: 30, resizeMode: "contain" }}
-            source={require("../assets/icons/ic_category.png")}
-          />
-          <View>
-            <Text>{categoty}</Text>
-            <Image
-              style={[styles.icon, styles.margin_right]}
-              source={require("../assets/icons/ic_arrow_right.png")}
-            />
-          </View>
-        </View> */}
-
         <Button
-          buttonName={categoryFocus?.name}
-          iconName={require("../assets/icons/ic_category.png")}
-          onPress={() => setModalVisiable(!modalVisiable)}
+          buttonName={focusCategory?.name}
+          iconName={categoryIconsMapper[focusCategoryIcon] || require("../assets/icons/ic_category.png")}
+          onPress={() => setCategoryModalVisible(!categoryModalVisible)}
         />
 
         <Button
@@ -109,20 +121,22 @@ const AddTransaction = () => {
           iconName={require("../assets/icons/ic_notes.png")}
         />
         <Button
-          buttonName="15/04/2022"
+          buttonName={toDisplayDate(datePicked)}
           iconName={require("../assets/icons/ic_planning.png")}
+          onPress={() => {onToggleDatetimePicker()}}
         />
         <Button
-          buttonName="Cash"
+          buttonName={walletPicked ? walletPicked.name : "Cash"}
           iconName={require("../assets/icons/ic_color_wallet.png")}
+          onPress={() => {setWalletModalVisible(true)}}
         />
       </View>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisiable}
+        visible={categoryModalVisible}
         onRequestClose={() => {
-          setModalVisiable(!modalVisiable);
+          setCategoryModalVisible(!categoryModalVisible);
         }}
       >
         <View style={styles.container}>
@@ -139,14 +153,11 @@ const AddTransaction = () => {
           >
             <Text
               style={{ position: "absolute", left: 12, top: 10 }}
-              onPress={() => setModalVisiable(false)}
+              onPress={() => setCategoryModalVisible(false)}
             >
               Close
             </Text>
             <Text>Select Category</Text>
-            {/* <Text style={{ position: "absolute", right: 12, top: 10 }}>
-              Edit
-            </Text> */}
           </View>
           <ScrollView>
             <View>
@@ -158,30 +169,118 @@ const AddTransaction = () => {
                   marginVertical: 20,
                 }}
               >
-                1
+                Expenses
               </Text>
               {categories?.categories.map((item, index) => (
                 <TouchableOpacity
                   onPress={() => {
-                    setCategoryFocus(item), setModalVisiable(!modalVisiable);
+                    setFocusCategory(item);
+                    setFocusCategoryIcon(item.icon_name);
+                    setCategoryModalVisible(!categoryModalVisible);
                   }}
                   key={index}
                   style={{
                     paddingVertical: 15,
                     backgroundColor: "#fff",
-                    marginHorizontal: 20,
-                    borderRadius: 20,
                     paddingHorizontal: 20,
-                    marginBottom: 5,
+                    borderBottomWidth: 1,
+                    borderBottomColor: grey3,
                   }}
                 >
-                  <Text>{item.name}</Text>
+                  <View style={{display: "flex", flexDirection: "row"}}>
+                    <Image
+                      style={[styles.iconCategoryModal, { marginRight: 10 }]}
+                      source={categoryIconsMapper[item.icon_name]}
+                    />
+                    <Text>{item.name}</Text>
+                  </View>
                 </TouchableOpacity>
               ))}
-              <Text>2</Text>
+              <Text>Incomes</Text>
             </View>
           </ScrollView>
         </View>
+      </Modal>
+      <DateTimePicker 
+        isVisible={datetimePickerModalVisible}
+        onConfirm={onHandleDatetimePicked}
+        onCancel={onToggleDatetimePicker}
+        mode="date"
+        locale="vi"
+      />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={walletModalVisible}
+        onRequestClose={() => {
+          setWalletModalVisible(!walletModalVisible);
+        }}
+      >
+        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: Platform.OS === "ios" ? 16 : 0}}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              paddingTop: 10,
+              borderBottomWidth: 0.2,
+              paddingBottom: 10,
+              borderColor: "#F5F5F5",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Text
+              style={{ position: "absolute", left: 12, top: 10 }}
+              onPress={() => setWalletModalVisible(false)}
+            >
+              Close
+            </Text>
+            <Text>Select Wallet</Text>
+          </View>
+
+          <View>
+            <View>
+                {walletList?.wallets
+                  ? walletList?.wallets.map((item, index) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          onGetWalletById(item.id);
+                        }}
+                        key={index}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          backgroundColor: "#fff",
+                          marginBottom: 0,
+                          paddingVertical: 15,
+                          paddingHorizontal: 5,
+                          borderBottomWidth: 1,
+                          borderBottomColor: "#eee"
+                        }}
+                      >
+                        <View
+                          style={{
+                            backgroundColor: "#fff",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            paddingHorizontal: 15,
+                            paddingVertical: 10,
+                          }}
+                        >
+                          <Image
+                            style={{ height: 40, width: 40, marginRight: 20 }}
+                            source={require("../assets/icons/ic_color_wallet.png")}
+                          />
+                          <View>
+                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
+                            <Text>{formatCurrency(item.balance)} đ</Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    ))
+                  : null}
+              </View>
+            </View>
+        </ScrollView>
       </Modal>
     </SafeAreaView>
   );
@@ -242,6 +341,12 @@ const styles = StyleSheet.create({
   icon: { 
     height: 15, 
     width: 15, 
+    resizeMode: "contain" 
+  },
+
+  iconCategoryModal: { 
+    height: 20, 
+    width: 20, 
     resizeMode: "contain" 
   },
 

@@ -8,16 +8,12 @@ import { grey3 } from "../configs/colors";
 import { formatCurrency } from "../ultils/string";
 import Routes from "../configs/routes";
 import ConfirmDialog from "../components/ConfirmDialog";
+import { setWalletList } from "../redux/actions/walletListAction";
 
 const WalletList = (props) => {
-    const [walletList, setWalletList] = useState<any>({})
     const { token } = useSelector((state: any) => state.tokenState);
+    const { walletList } = useSelector((state: any) => state.walletListState);
     const { navigate } = useNavigation();
-
-    const onGetWallets = async () => {
-      const walletList = await getWallets(token);
-      setWalletList(walletList);
-    };
 
     const onDeleteWallet = (id) => {
       const temp = {...walletList};
@@ -25,10 +21,6 @@ const WalletList = (props) => {
       setWalletList(temp);
       deleteWallet(token, id);
     }
-
-    useEffect(() => {
-        onGetWallets();
-    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -88,7 +80,6 @@ const WalletList = (props) => {
 
                           <TouchableOpacity onPress={() => 
                             ConfirmDialog(onDeleteWallet, "Are you sure?", "Are you sure that you want to delete this wallet?", item.id)
-                            // onDeleteWallet(item.id);
                           }>
                             <Image
                               style={{ height: 40, width: 40 }}

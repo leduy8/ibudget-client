@@ -17,6 +17,7 @@ import {
   FlatList,
   Modal,
 } from "react-native";
+import _ from "lodash";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { Border } from "victory-native";
@@ -24,11 +25,13 @@ import Button from "../components/Button";
 import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
 import { windowWidth } from "../configs/constants";
 import { textContent } from "../configs/textContent";
+import { setFocusWallet } from "../redux/actions/focusWalletAction";
+import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
-import { formatCurrency } from "../ultils/string"
+import { formatCurrency } from "../ultils/string";
 
 const Header = (props) => {
-  const { onPress, balance } = props;
+  const { onPress, walletName, balance } = props;
 
   return (
     <SafeAreaView style={styles.v_header}>
@@ -61,7 +64,7 @@ const Header = (props) => {
             textAlignVertical: "center",
           }}
         >
-          {textContent.TRANSACTIONS.CASH}
+          {walletName || textContent.TRANSACTIONS.CASH}
         </Text>
         <Text
           style={{
@@ -70,7 +73,7 @@ const Header = (props) => {
             textAlignVertical: "center",
           }}
         >
-          {balance} đ
+          {formatCurrency(balance) || 0} đ
         </Text>
       </View>
 
@@ -96,31 +99,33 @@ const Transactions = () => {
   let myList = useRef();
 
   const [selected, setSelected] = useState<any>(3);
-  const [modalVisiable, setModalVisiable] = useState<any>(false);
+  const [modalVisible, setModalVisible] = useState<any>(false);
   const { token } = useSelector((state: any) => state.tokenState);
   const { dateRange } = useSelector((state: any) => state.dateRangeState);
-  const [walletData, setWalletData] = useState<any>([]);
-  const [wallet, setWallet] = useState<any>({});
+  const { focusWallet } = useSelector((state: any) => state.focusWalletState);
+  const { walletList } = useSelector((state: any) => state.walletListState);
   const [toggleAddWallet, setToggleAddWallet] = useState<any>(false);
   const [walletName, setWalletName] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<any>();
   const [totalBalance, setTotalBalance] = useState<any>(0);
-  const [focusWallet, setFocusWallet] = useState<any>(1);
 
   const onGetWallets = async () => {
-    let totalBalanceTemp = 0;
-    const walletData = await getWallets(token);
-    setWalletData(walletData);
-    for (let i = 0; i < walletData?.wallets.length; i++) {
-      totalBalanceTemp = totalBalanceTemp + walletData.wallets[i].balance;
-    }
-    setTotalBalance(totalBalanceTemp);
+    const walletData: any = await getWallets(token);
+    setWalletList(walletData);
   };
 
+  const onSetTotalBalance = () => {
+    let totalBalanceTemp = 0;
+    for (let i = 0; i < walletList.wallets.length; i++) {
+      totalBalanceTemp = totalBalanceTemp + walletList.wallets[i].balance;
+    }
+    setTotalBalance(totalBalanceTemp);
+  }
+
   const onGetWalletById = async (id) => {
-    const walletData = await getWalletById(token, id);
-    setWallet(walletData);
-    setModalVisiable(!modalVisiable);
+    const temp: any = await getWalletById(token, id);
+    setFocusWallet(temp);
+    setModalVisible(!modalVisible);
   };
 
   const onCreateWallet = async () => {
@@ -133,11 +138,6 @@ const Transactions = () => {
       setToggleAddWallet(!toggleAddWallet);
     }
   };
-
-  useEffect(() => {
-    onGetWallets();
-    // console.log(`dateRange = ${dateRange}`);
-  }, []);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -164,8 +164,12 @@ const Transactions = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header
-        onPress={() => setModalVisiable(!modalVisiable)}
-        balance={formatCurrency(wallet.balance)}
+        onPress={() => {
+          setModalVisible(!modalVisible);
+          onSetTotalBalance();
+        }}
+        balance={focusWallet.balance}
+        walletName={focusWallet.name}
       />
       <View style={styles.v_month_container}>
         <FlatList
@@ -204,22 +208,24 @@ const Transactions = () => {
             <Text>-$ 58,000.00</Text>
           </View>
 
-          <Text
-            style={{ textAlign: "center", color: mainColor, marginTop: 5 }}
-          >
-            View report for this period
-          </Text>
+          <TouchableOpacity onPress={() => {console.log(walletList)}}>
+            <Text
+              style={{ textAlign: "center", color: mainColor, marginTop: 5 }}
+            >
+              View report for this period
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisiable}
+        visible={modalVisible}
         onRequestClose={() => {
-          setModalVisiable(!modalVisiable);
+          setModalVisible(!modalVisible);
         }}
       >
-        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: 16 }}>
+        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: Platform.OS === "ios" ? 16 : 0}}>
           <View
             style={{
               flexDirection: "row",
@@ -233,7 +239,7 @@ const Transactions = () => {
           >
             <Text
               style={{ position: "absolute", left: 12, top: 10 }}
-              onPress={() => setModalVisiable(false)}
+              onPress={() => setModalVisible(false)}
             >
               Close
             </Text>
@@ -269,8 +275,8 @@ const Transactions = () => {
               INCLUDED IN TOTAL
             </Text>
             <View>
-                {walletData?.wallets
-                  ? walletData?.wallets.map((item, index) => (
+                {walletList?.wallets
+                  ? walletList?.wallets.map((item, index) => (
                       <TouchableOpacity
                         onPress={() => {
                           onGetWalletById(item.id);

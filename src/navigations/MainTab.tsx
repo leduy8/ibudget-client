@@ -7,6 +7,7 @@ import Report from "../containers/Report";
 import Planning from "../containers/Planning";
 import Account from "../containers/Account";
 import AddTransaction from "../containers/AddTransaction";
+import Learning from "../containers/Learning";
 import { mainColor } from "../configs/colors";
 
 const Tab = createBottomTabNavigator();
@@ -73,14 +74,14 @@ const MainTab = () => {
         }}
       ></Tab.Screen>
       <Tab.Screen
-        name={Routes.Report}
-        component={Report}
+        name={Routes.Planning}
+        component={Planning}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <View style={styles.bt_navIcon}>
               <Image
-                source={require("../assets/icons/ic_chart.png")}
+                source={require("../assets/icons/ic_planning.png")}
                 resizeMode="contain"
                 style={{
                   height: 20,
@@ -91,7 +92,7 @@ const MainTab = () => {
               <Text
                 style={[styles.txt_navText, focused && { color: "#212121" }]}
               >
-                {Routes.Report}
+                {Routes.Planning}
               </Text>
             </View>
           ),
@@ -125,14 +126,14 @@ const MainTab = () => {
         }}
       ></Tab.Screen>
       <Tab.Screen
-        name={Routes.Planning}
-        component={Planning}
+        name={Routes.Learning}
+        component={Learning}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <View style={styles.bt_navIcon}>
               <Image
-                source={require("../assets/icons/ic_planning.png")}
+                source={require("../assets/icons/ic_learning.png")}
                 resizeMode="contain"
                 style={{
                   height: 20,
@@ -143,7 +144,7 @@ const MainTab = () => {
               <Text
                 style={[styles.txt_navText, focused && { color: "#212121" }]}
               >
-                {Routes.Planning}
+                {Routes.Learning}
               </Text>
             </View>
           ),

@@ -20,6 +20,9 @@ import { getUser } from "./../../services/auth";
 import { mainColor, placeholderTextColor } from "../../configs/colors";
 import { setDateRange } from "../../redux/actions/dateRangeAction";
 import { getMonthsAndNBefore } from "../../ultils/date";
+import { setWalletList } from './../../redux/actions/walletListAction';
+import { getWallets } from "../../services/wallet";
+import { setFocusWallet } from "../../redux/actions/focusWalletAction";
 
 const Login = () => {
   const { navigate } = useNavigation();
@@ -71,6 +74,11 @@ const Login = () => {
         const userData: any = await getUser(data.access_token);
         if (!userData?.error_message) {
           setUser(userData);
+        }
+        const walletList: any = await getWallets(data.access_token);
+        if (!walletList?.error_message) {
+          setWalletList(walletList);
+          setFocusWallet(walletList.wallets[0] || {});
         }
         setDateRange(getMonthsAndNBefore(4));
       } else if (data?.error_message) {
