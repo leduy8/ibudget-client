@@ -16,12 +16,14 @@ import {
   ScrollView,
   Modal,
 } from "react-native";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { useSelector } from "react-redux";
 import Button from "../components/Button";
-import { grey1, grey3 } from "../configs/colors";
+import { grey3, placeholderTextColor, happy, frown } from "../configs/colors";
 import Routes from "../configs/routes";
 import { getCategories } from "../services/category";
+import { createTransaction } from "../services/transaction";
 import { getWalletById } from "../services/wallet";
 import { getDateJsonFormat, toDisplayDate } from "../ultils/date";
 import { categoryIconsMapper, formatCurrency } from "../ultils/string";
@@ -30,16 +32,18 @@ const AddTransaction = () => {
   const { navigate } = useNavigation();
   const { token } = useSelector((state: any) => state.tokenState);
   const { walletList } = useSelector((state: any) => state.walletListState);
+  const { focusWallet } = useSelector((state: any) => state.focusWalletState);
   const [money, setMoney] = useState<any>(0);
   const [categories, setCategories] = useState<any>();
   const [focusCategory, setFocusCategory] = useState<any>(categories);
   const [focusCategoryIcon, setFocusCategoryIcon] = useState<any>();
   const [note, setNote] = useState("");
   const [datePicked, setDatePicked] = useState(getDateJsonFormat(new Date().toISOString()));
-  const [walletPicked, setWalletPicked] = useState<any>();
+  const [walletPicked, setWalletPicked] = useState<any>(focusWallet);
   const [categoryModalVisible, setCategoryModalVisible] = useState<any>(false);
   const [datetimePickerModalVisible, setDatetimePickerModalVisible] = useState<any>(false);
   const [walletModalVisible, setWalletModalVisible] = useState<any>(false);
+  const [transactionStatus, setTransactionStatus] = useState(0);
 
   const onGetCategories = async () => {
     const temp = await getCategories(token);
@@ -80,14 +84,28 @@ const AddTransaction = () => {
             onPress={() => navigate(Routes.Transactions)}
           >
             <Image
-              style={styles.icon}
+              style={styles.iconHeader}
               source={require("../assets/icons/ic_arrow_left.png")}
             />
           </TouchableOpacity>
         </View>
-        <Text style={{ position: "absolute", right: 0, paddingRight: 15 }}>
-          Save
-        </Text>
+        <TouchableOpacity style={{ position: "absolute", right: 0, paddingRight: 15 }} onPress={() => {
+          let transaction = {
+            "price": money,
+            "note": note,
+            "createdDate": datePicked,
+            "category_id": focusCategory.id,
+            "wallet_id": walletPicked.id,
+          };
+
+          if (transactionStatus === 1) transaction["is_positive"] = true;
+          else if (transactionStatus === 2) transaction["is_positive"] = false;
+
+          console.log(transaction);
+          // createTransaction(transaction, token);
+        }}>
+          <Text>Save</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.v_add_content}>
@@ -116,20 +134,44 @@ const AddTransaction = () => {
           onPress={() => setCategoryModalVisible(!categoryModalVisible)}
         />
 
-        <Button
-          buttonName="Note"
-          iconName={require("../assets/icons/ic_notes.png")}
-        />
+        <View style={styles.noteInputContainer}>
+          <Image
+            style={styles.icon}
+            source={require("../assets/icons/ic_notes.png")}
+          />
+          <TextInput
+            style={{fontSize: 15, marginLeft: 10}}
+            multiline={true} 
+            value={note} 
+            placeholder={"Write your note"} 
+            placeholderTextColor={placeholderTextColor}
+            onChangeText={(text) => setNote(text)}
+            maxLength={200}
+          />
+        </View>
         <Button
           buttonName={toDisplayDate(datePicked)}
           iconName={require("../assets/icons/ic_planning.png")}
           onPress={() => {onToggleDatetimePicker()}}
         />
         <Button
-          buttonName={walletPicked ? walletPicked.name : "Cash"}
+          buttonName={walletPicked ? walletPicked.name : "Choose your wallet"}
           iconName={require("../assets/icons/ic_color_wallet.png")}
           onPress={() => {setWalletModalVisible(true)}}
         />
+        <View>
+          <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginBottom: 5}}>
+            <Text style={{fontSize: 15}}>Is this a positive transaction?</Text>
+          </View>
+          <View style={styles.statusIconContainer}>
+            <TouchableWithoutFeedback onPress={() => setTransactionStatus(2)}>
+              <Icon name={"frown-o"} size={100} color={transactionStatus === 2 ? frown : "#000"} />
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => setTransactionStatus(1)}>
+              <Icon name={"smile-o"} size={100} color={transactionStatus === 1 ? happy : "#000"} />
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
       </View>
       <Modal
         animationType="slide"
@@ -189,7 +231,7 @@ const AddTransaction = () => {
                 >
                   <View style={{display: "flex", flexDirection: "row"}}>
                     <Image
-                      style={[styles.iconCategoryModal, { marginRight: 10 }]}
+                      style={[styles.icon, { marginRight: 10 }]}
                       source={categoryIconsMapper[item.icon_name]}
                     />
                     <Text>{item.name}</Text>
@@ -338,17 +380,39 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  icon: { 
+  iconHeader: { 
     height: 15, 
     width: 15, 
     resizeMode: "contain" 
   },
 
-  iconCategoryModal: { 
+  icon: { 
     height: 20, 
     width: 20, 
-    resizeMode: "contain" 
+    resizeMode: "contain",
   },
 
-  margin_right: { position: "absolute", right: 0, tintColor: grey3 },
+  margin_right: { 
+    position: "absolute", 
+    right: 0, 
+    tintColor: grey3 
+  },
+
+  noteInputContainer: {
+    display: "flex", 
+    flexDirection: "row", 
+    backgroundColor: "#fff",
+    paddingHorizontal: 15,
+    borderBottomWidth: 0.2,
+    borderTopWidth: 0.2,
+    borderColor: grey3,
+    paddingVertical: 15,
+    alignItems: "center",
+  },
+
+  statusIconContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  }
 });
