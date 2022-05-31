@@ -93,7 +93,7 @@ const AddTransaction = () => {
           let transaction = {
             "price": money,
             "note": note,
-            "createdDate": datePicked,
+            "created_date": datePicked,
             "category_id": focusCategory.id,
             "wallet_id": walletPicked.id,
           };
@@ -103,6 +103,7 @@ const AddTransaction = () => {
 
           console.log(transaction);
           // createTransaction(transaction, token);
+          navigate(Routes.Transactions);
         }}>
           <Text>Save</Text>
         </TouchableOpacity>

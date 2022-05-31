@@ -4,6 +4,7 @@ import userState from "./user";
 import dateRangeState from "./dateRange";
 import focusWalletState from './focusWallet';
 import walletListState from './walletList';
+import updateSignalState from './updateSignal';
 
 const rootReducer = combineReducers({
   tokenState,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   dateRangeState,
   focusWalletState,
   walletListState,
+  updateSignalState,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

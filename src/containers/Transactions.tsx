@@ -104,6 +104,7 @@ const Transactions = () => {
   const { dateRange } = useSelector((state: any) => state.dateRangeState);
   const { focusWallet } = useSelector((state: any) => state.focusWalletState);
   const { walletList } = useSelector((state: any) => state.walletListState);
+  const { updateSignal } = useSelector((state: any) => state.updateSignalState);
   const [toggleAddWallet, setToggleAddWallet] = useState<any>(false);
   const [walletName, setWalletName] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<any>();
@@ -344,8 +345,9 @@ const Transactions = () => {
                 <TouchableOpacity
                   onPress={() => {
                     onCreateWallet();
-                    setWalletName("")
-                    setWalletBalance("")
+                    onSetTotalBalance();
+                    setWalletName("");
+                    setWalletBalance("");
                   }}
                   style={{
                     backgroundColor: mainColor,
