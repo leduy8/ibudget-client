@@ -7,3 +7,5 @@ export const getWalletById = (token: any, id) => request.get(`/wallets/${id}`, {
 export const createWallet = (data: any, token: any) => request.post("/wallets", data, "POST", token);
 
 export const deleteWallet = (token: any, id) => request.delete(`/wallets/${id}`, {}, token)
+
+export const transactInWallet = (token: any, data, id) => request.put(`/wallets/${id}/transaction`, data, token);

@@ -1,4 +1,4 @@
-const Routes = {
+const Routes: any = {
     Register: "Register",
     Login: "Login",
     Transactions: "Transactions",

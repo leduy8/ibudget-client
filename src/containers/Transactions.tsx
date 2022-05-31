@@ -29,6 +29,8 @@ import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
 import { formatCurrency } from "../ultils/string";
+import { getTransactions, getTransactionById } from './../services/transaction';
+import { setUpdateSignal } from './../redux/actions/updateSignalAction';
 
 const Header = (props) => {
   const { onPress, walletName, balance } = props;
@@ -96,7 +98,7 @@ const Header = (props) => {
 };
 
 const Transactions = () => {
-  let myList = useRef();
+  let myList: any = useRef();
 
   const [selected, setSelected] = useState<any>(3);
   const [modalVisible, setModalVisible] = useState<any>(false);
@@ -109,6 +111,8 @@ const Transactions = () => {
   const [walletName, setWalletName] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<any>();
   const [totalBalance, setTotalBalance] = useState<any>(0);
+  const [transactionList, setTransactionList] = useState<any>([]);
+  const [focusTransaction, setFocusTransaction] = useState<any>({});
 
   const onGetWallets = async () => {
     const walletData: any = await getWallets(token);
@@ -139,6 +143,22 @@ const Transactions = () => {
       setToggleAddWallet(!toggleAddWallet);
     }
   };
+
+  const onGetTransactions = async () => {
+    const temp = await getTransactions(token);
+    setTransactionList(temp);
+    console.log(transactionList);
+  }
+
+  const onGetTransactionById = async (id) => {
+    const temp = await getTransactionById(token, id);
+    setFocusTransaction(temp);
+  }
+
+  useEffect(() => {
+    onGetTransactions();
+    setUpdateSignal(false);
+  }, [updateSignal]);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity

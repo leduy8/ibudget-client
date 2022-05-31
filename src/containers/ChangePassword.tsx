@@ -9,7 +9,7 @@ import Button from "../components/Button";
 import { textContent } from "../configs/textContent";
 import { TextInput } from "react-native-gesture-handler";
 import { changePassword } from "../services/password";
-import alertPopUp from "../components/AlertPopUp";
+import AlertPopUp from "../components/AlertPopUp";
 
 const ChangePassword = (props) => {
     const { token } = useSelector((state: any) => state.tokenState);
@@ -24,12 +24,12 @@ const ChangePassword = (props) => {
         try {
             await changePassword({password: password}, token);
             console.log(token);
-            alertPopUp("", "Password changed successfully!");
+            AlertPopUp("", "Password changed successfully!");
             setPassword("");
             setPassword2("");
             navigate(Routes.Account);
         } catch (error) {
-            alertPopUp("", "Something's wrong");
+            AlertPopUp("", "Something's wrong");
         } 
     }
 
@@ -117,7 +117,7 @@ const ChangePassword = (props) => {
                     buttonName={textContent.CHANGE_PASSWORD.CONFIRM_PASSWORD}
                     onPress={() => {
                         if (password !== password2) {
-                            alertPopUp("Invalid input", "Password and confirm password must be match.");
+                            AlertPopUp("Invalid input", "Password and confirm password must be match.");
                         }
                         else {
                             onChangePassword()

@@ -24,9 +24,11 @@ import { grey3, placeholderTextColor, happy, frown } from "../configs/colors";
 import Routes from "../configs/routes";
 import { getCategories } from "../services/category";
 import { createTransaction } from "../services/transaction";
-import { getWalletById } from "../services/wallet";
+import { getWalletById, transactInWallet } from "../services/wallet";
 import { getDateJsonFormat, toDisplayDate } from "../ultils/date";
 import { categoryIconsMapper, formatCurrency } from "../ultils/string";
+import { setUpdateSignal } from './../redux/actions/updateSignalAction';
+import AlertPopUp from './../components/AlertPopUp';
 
 const AddTransaction = () => {
   const { navigate } = useNavigation();
@@ -35,7 +37,7 @@ const AddTransaction = () => {
   const { focusWallet } = useSelector((state: any) => state.focusWalletState);
   const [money, setMoney] = useState<any>(0);
   const [categories, setCategories] = useState<any>();
-  const [focusCategory, setFocusCategory] = useState<any>(categories);
+  const [focusCategory, setFocusCategory] = useState<any>({});
   const [focusCategoryIcon, setFocusCategoryIcon] = useState<any>();
   const [note, setNote] = useState("");
   const [datePicked, setDatePicked] = useState(getDateJsonFormat(new Date().toISOString()));
@@ -46,7 +48,7 @@ const AddTransaction = () => {
   const [transactionStatus, setTransactionStatus] = useState(0);
 
   const onGetCategories = async () => {
-    const temp = await getCategories(token);
+    const temp: any = await getCategories(token);
     if (temp?.categories) {
       temp.categories.shift();
       setCategories(temp);
@@ -89,9 +91,9 @@ const AddTransaction = () => {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={{ position: "absolute", right: 0, paddingRight: 15 }} onPress={() => {
+        <TouchableOpacity style={{ position: "absolute", right: 0, paddingRight: 15 }} onPress={ async () => {
           let transaction = {
-            "price": money,
+            "price": focusCategory.type === "Expense" ? money * -1 : money,
             "note": note,
             "created_date": datePicked,
             "category_id": focusCategory.id,
@@ -101,9 +103,21 @@ const AddTransaction = () => {
           if (transactionStatus === 1) transaction["is_positive"] = true;
           else if (transactionStatus === 2) transaction["is_positive"] = false;
 
-          console.log(transaction);
-          // createTransaction(transaction, token);
+          const returnedWalletAfterTransaction: any = await transactInWallet(token, transaction, walletPicked.id);
+          if (returnedWalletAfterTransaction.error_message) {
+            return AlertPopUp("Something went wrong", returnedWalletAfterTransaction.error_message);
+          }
+          const returnedTransaction: any = await createTransaction(transaction, token);
+          if (returnedTransaction.error_message) {
+            return AlertPopUp("Something went wrong", returnedTransaction.error_message);
+          }
+          setUpdateSignal(true);
           navigate(Routes.Transactions);
+          setMoney(0);
+          setNote("");
+          setDatePicked(new Date().toISOString());
+          setWalletPicked(focusWallet);
+          setTransactionStatus(0);
         }}>
           <Text>Save</Text>
         </TouchableOpacity>
@@ -116,15 +130,17 @@ const AddTransaction = () => {
           </Text>
           <View style={styles.v_money}>
             <View style={styles.bt_money}>
-              <Text>VND</Text>
+              <Text style={{fontSize: 35, color: focusCategory.type === "Expense" ? frown : happy}}>{focusCategory.type === "Expense" ? "-" : "+"}</Text>
             </View>
             <View style={styles.v_input_money}>
               <TextInput
-                style={styles.txt_input_money}
+                style={[styles.txt_input_money, { color: focusCategory.type === "Expense" ? frown : happy }]}
                 keyboardType="numeric"
                 value={money.toString()}
                 onChangeText={setMoney}
+                maxLength={10}
               />
+              <Text style={{fontSize: 40, marginLeft: 5, color: focusCategory.type === "Expense" ? frown : happy}}>đ</Text>
             </View>
           </View>
         </View>
@@ -210,36 +226,82 @@ const AddTransaction = () => {
                   fontWeight: "bold",
                   marginLeft: 15,
                   marginVertical: 20,
+                  color: frown,
                 }}
               >
                 Expenses
               </Text>
-              {categories?.categories.map((item, index) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    setFocusCategory(item);
-                    setFocusCategoryIcon(item.icon_name);
-                    setCategoryModalVisible(!categoryModalVisible);
-                  }}
-                  key={index}
-                  style={{
-                    paddingVertical: 15,
-                    backgroundColor: "#fff",
-                    paddingHorizontal: 20,
-                    borderBottomWidth: 1,
-                    borderBottomColor: grey3,
-                  }}
-                >
-                  <View style={{display: "flex", flexDirection: "row"}}>
-                    <Image
-                      style={[styles.icon, { marginRight: 10 }]}
-                      source={categoryIconsMapper[item.icon_name]}
-                    />
-                    <Text>{item.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-              <Text>Incomes</Text>
+              {categories?.categories.map((item, index) => {
+                if (item.type === "Expense") {
+                  return (
+                    (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setFocusCategory(item);
+                          setFocusCategoryIcon(item.icon_name);
+                          setCategoryModalVisible(!categoryModalVisible);
+                        }}
+                        key={index}
+                        style={{
+                          paddingVertical: 15,
+                          backgroundColor: "#fff",
+                          paddingHorizontal: 20,
+                          borderBottomWidth: 1,
+                          borderBottomColor: grey3,
+                        }}
+                      >
+                        <View style={{display: "flex", flexDirection: "row"}}>
+                          <Image
+                            style={[styles.icon, { marginRight: 10 }]}
+                            source={categoryIconsMapper[item.icon_name]}
+                          />
+                          <Text>{item.name}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  );
+                }
+              })}
+              <Text style={{ 
+                fontSize: 20, 
+                fontWeight: "bold", 
+                marginLeft: 15, 
+                marginVertical: 20,
+                color: happy, 
+              }}>
+                Incomes
+              </Text>
+              {categories?.categories.map((item, index) => {
+                if (item.type === "Income") {
+                  return (
+                    (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setFocusCategory(item);
+                          setFocusCategoryIcon(item.icon_name);
+                          setCategoryModalVisible(!categoryModalVisible);
+                        }}
+                        key={index}
+                        style={{
+                          paddingVertical: 15,
+                          backgroundColor: "#fff",
+                          paddingHorizontal: 20,
+                          borderBottomWidth: 1,
+                          borderBottomColor: grey3,
+                        }}
+                      >
+                        <View style={{display: "flex", flexDirection: "row"}}>
+                          <Image
+                            style={[styles.icon, { marginRight: 10 }]}
+                            source={categoryIconsMapper[item.icon_name]}
+                          />
+                          <Text>{item.name}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  );
+                }
+              })}
             </View>
           </ScrollView>
         </View>
@@ -359,19 +421,15 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   bt_money: {
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: grey3,
     alignItems: "center",
     flex: 0.1,
   },
 
   v_input_money: {
-    marginLeft: 15,
+    flexDirection: "row",
     paddingBottom: 10,
     marginBottom: -8,
     flex: 0.9,
-    justifyContent: "center",
   },
   txt_input_money: {
     fontSize: 40,
