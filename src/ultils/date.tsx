@@ -1,3 +1,6 @@
+const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
 export function getLastDayOfMonth(month, year) {
     return new Date(year, month, 0).getDate();
 }
@@ -52,4 +55,15 @@ export function getDateJsonFormat(date: string) {
 export function toDisplayDate(jsonDate: string) {
     const dateParts = jsonDate.split("-");
     return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+}
+
+export function getDateDetails(date: string) {
+    let year: any, month: any, day: any = [...date.split("-")];
+    
+    return {
+        "weekday": weekdays[new Date(year, month, day).getDay()],
+        "day": day,
+        "month": months[month - 1],
+        "year": year,
+    };
 }

@@ -8,6 +8,7 @@ import WalletList from "../containers/WalletList";
 import AccountDetails from "../containers/AccountDetails";
 import ChangePassword from '../containers/ChangePassword';
 import { useSelector } from "react-redux";
+import Report from "../containers/Report";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,11 @@ const RootStack = memo(() => {
           <Stack.Screen
             name={Routes.MainTab}
             component={MainTab}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={Routes.Report}
+            component={Report}
             options={{ headerShown: false }}
           />
           <Stack.Screen

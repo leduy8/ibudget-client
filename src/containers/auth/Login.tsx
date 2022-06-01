@@ -96,7 +96,7 @@ const Login = () => {
     <SafeAreaView style={styles.container}>
       {turnOnLoading ? <Loading></Loading> : null}
 
-      <Text style={styles.txt_header}>Login</Text>
+      <Text style={styles.txt_header}>Ibudget</Text>
 
       <View style={styles.textInput}>
         <TextInput

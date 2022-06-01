@@ -17,6 +17,7 @@ import {
   FlatList,
   Modal,
 } from "react-native";
+import Routes from './../configs/routes';
 import _ from "lodash";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
@@ -99,6 +100,7 @@ const Header = (props) => {
 
 const Transactions = () => {
   let myList: any = useRef();
+  const { navigate } = useNavigation();
 
   const [selected, setSelected] = useState<any>(3);
   const [modalVisible, setModalVisible] = useState<any>(false);
@@ -111,8 +113,11 @@ const Transactions = () => {
   const [walletName, setWalletName] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<any>();
   const [totalBalance, setTotalBalance] = useState<any>(0);
-  const [transactionList, setTransactionList] = useState<any>([]);
+  const [transactionList, setTransactionList] = useState<any>({});
+  const [reformattedtransactionList, setReformattedTransactionList] = useState<any>({});
   const [focusTransaction, setFocusTransaction] = useState<any>({});
+  const [inflow, setInflow] = useState(0);
+  const [outflow, setOutflow] = useState(0);
 
   const onGetWallets = async () => {
     const walletData: any = await getWallets(token);
@@ -145,14 +150,48 @@ const Transactions = () => {
   };
 
   const onGetTransactions = async () => {
-    const temp = await getTransactions(token);
-    setTransactionList(temp);
-    console.log(transactionList);
+    const temp: any = await getTransactions(token);
+    if (!temp.error_message) {
+      setTransactionList({...temp});
+      onUpdateInOutBalance(temp);
+      onReformatTransactionList(temp);
+    }
   }
 
   const onGetTransactionById = async (id) => {
     const temp = await getTransactionById(token, id);
     setFocusTransaction(temp);
+  }
+
+  const onUpdateInOutBalance = (transactions) => {
+    let tempInflow = 0;
+    let tempOutflow = 0;
+    transactions.transactions.map((transaction) => {
+      if (transaction.category.type === "Expense") {
+        tempOutflow += transaction.price;
+      } else if (transaction.category.type === "Income") {
+        tempInflow += transaction.price;
+      }
+    });
+
+    setInflow(tempInflow);
+    setOutflow(tempOutflow);
+  }
+
+  const onInOutDifferences = () => {
+    return inflow - outflow;
+  }
+
+  const onReformatTransactionList = (transactions) => {
+    let tempFormattedTransaction: object = {};
+    transactions.transactions.map(transaction => {
+      if (!tempFormattedTransaction[transaction.created_date]) {
+        tempFormattedTransaction[transaction.created_date] = [];
+      }
+      tempFormattedTransaction[transaction.created_date].push(transaction);
+    });
+
+    setReformattedTransactionList({...tempFormattedTransaction});
   }
 
   useEffect(() => {
@@ -181,6 +220,15 @@ const Transactions = () => {
       </Text>
     </TouchableOpacity>
   );
+
+  const renderTransaction = () => {
+    console.log("======================");
+    console.log(reformattedtransactionList);
+    const keys = Object.keys(reformattedtransactionList);
+    return (
+      <View></View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -216,26 +264,73 @@ const Transactions = () => {
       <ScrollView>
         <View style={styles.v_count_balance}>
           <View style={[styles.v_balance, { marginBottom: 10 }]}>
-            <Text>Openning balance</Text>
-            <Text style={{ position: "absolute", right: 15 }}>$ 0.00</Text>
+            <Text>Inflow</Text>
+            <Text style={{ position: "absolute", right: 15 }}>+{formatCurrency(inflow)} đ</Text>
           </View>
           <View style={styles.v_balance}>
-            <Text>Ending balance</Text>
+            <Text>Outflow</Text>
             <Text style={{ position: "absolute", right: 15 }}>
-              -$ 58,000.00
+              -{formatCurrency(outflow)} đ
             </Text>
           </View>
           <View style={styles.v_result}>
-            <Text>-$ 58,000.00</Text>
+            <Text>{formatCurrency(onInOutDifferences()) + " đ"}</Text>
           </View>
 
-          <TouchableOpacity onPress={() => {console.log(walletList)}}>
+          <TouchableOpacity onPress={() => {navigate(Routes.Report)}}>
             <Text
               style={{ textAlign: "center", color: mainColor, marginTop: 5 }}
             >
               View report for this period
             </Text>
           </TouchableOpacity>
+        </View>
+
+        <View style={{marginVertical: 10}}>
+          {renderTransaction()}
+          {/* <View style={{marginVertical: 10}}>
+            <View style={{ 
+              display: "flex", 
+              flexDirection: "row", 
+              alignItems: "center", 
+              backgroundColor: "#fff", 
+              borderBottomWidth: 1,
+              borderBottomColor: grey3,
+              paddingBottom: 10,
+            }}>
+              <Text style={{ 
+                fontSize: 35, 
+                fontWeight: "600", 
+                paddingLeft: 15,
+                paddingRight: 15,
+              }}>
+                24
+              </Text>
+              <View>
+                <Text>Wednesday</Text>
+                <Text>May 2022</Text>
+              </View>
+            </View>
+
+            <TouchableOpacity style={{
+              display: "flex", 
+              flexDirection: "row", 
+              justifyContent: "space-between", 
+              alignItems: "center",
+              backgroundColor: "#fff",
+              paddingHorizontal: 20,
+              paddingVertical: 20,
+            }}>
+              <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                <Image
+                  style={{ height: 30, width: 30, marginRight: 20 }}
+                  source={require("../assets/icons/ic_color_wallet.png")}
+                />
+                <Text style={{ fontSize: 15 }}>dasdasdas</Text>
+              </View>
+              <Text style={{  }}>100000 đ</Text>
+            </TouchableOpacity>
+          </View> */}
         </View>
       </ScrollView>
       <Modal
