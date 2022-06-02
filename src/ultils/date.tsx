@@ -58,7 +58,8 @@ export function toDisplayDate(jsonDate: string) {
 }
 
 export function getDateDetails(date: string) {
-    let year: any, month: any, day: any = [...date.split("-")];
+    let year: any, month: any, day: any;
+    [year, month, day] = [...date.split("-")];
     
     return {
         "weekday": weekdays[new Date(year, month, day).getDay()],

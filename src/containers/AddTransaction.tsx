@@ -91,7 +91,7 @@ const AddTransaction = () => {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={{ position: "absolute", right: 0, paddingRight: 15 }} onPress={ async () => {
+        <TouchableOpacity style={{ position: "absolute", right: 0, paddingRight: 15 }} onPress={async () => {
           let transaction = {
             "price": focusCategory.type === "Expense" ? money * -1 : money,
             "note": note,
@@ -115,7 +115,7 @@ const AddTransaction = () => {
           navigate(Routes.Transactions);
           setMoney(0);
           setNote("");
-          setDatePicked(new Date().toISOString());
+          setDatePicked(getDateJsonFormat(new Date().toISOString()));
           setWalletPicked(focusWallet);
           setTransactionStatus(0);
         }}>
@@ -130,7 +130,7 @@ const AddTransaction = () => {
           </Text>
           <View style={styles.v_money}>
             <View style={styles.bt_money}>
-              <Text style={{fontSize: 35, color: focusCategory.type === "Expense" ? frown : happy}}>{focusCategory.type === "Expense" ? "-" : "+"}</Text>
+              <Text style={{ fontSize: 35, color: focusCategory.type === "Expense" ? frown : happy }}>{focusCategory.type === "Expense" ? "-" : "+"}</Text>
             </View>
             <View style={styles.v_input_money}>
               <TextInput
@@ -140,7 +140,7 @@ const AddTransaction = () => {
                 onChangeText={setMoney}
                 maxLength={10}
               />
-              <Text style={{fontSize: 40, marginLeft: 5, color: focusCategory.type === "Expense" ? frown : happy}}>đ</Text>
+              <Text style={{ fontSize: 40, marginLeft: 5, color: focusCategory.type === "Expense" ? frown : happy }}>đ</Text>
             </View>
           </View>
         </View>
@@ -157,10 +157,10 @@ const AddTransaction = () => {
             source={require("../assets/icons/ic_notes.png")}
           />
           <TextInput
-            style={{fontSize: 15, marginLeft: 10}}
-            multiline={true} 
-            value={note} 
-            placeholder={"Write your note"} 
+            style={{ fontSize: 15, marginLeft: 10 }}
+            multiline={true}
+            value={note}
+            placeholder={"Write your note"}
             placeholderTextColor={placeholderTextColor}
             onChangeText={(text) => setNote(text)}
             maxLength={200}
@@ -169,16 +169,16 @@ const AddTransaction = () => {
         <Button
           buttonName={toDisplayDate(datePicked)}
           iconName={require("../assets/icons/ic_planning.png")}
-          onPress={() => {onToggleDatetimePicker()}}
+          onPress={() => { onToggleDatetimePicker() }}
         />
         <Button
           buttonName={walletPicked ? walletPicked.name : "Choose your wallet"}
           iconName={require("../assets/icons/ic_color_wallet.png")}
-          onPress={() => {setWalletModalVisible(true)}}
+          onPress={() => { setWalletModalVisible(true) }}
         />
         <View>
-          <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginBottom: 5}}>
-            <Text style={{fontSize: 15}}>Is this a positive transaction?</Text>
+          <View style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: 5 }}>
+            <Text style={{ fontSize: 15 }}>Is this a positive transaction?</Text>
           </View>
           <View style={styles.statusIconContainer}>
             <TouchableWithoutFeedback onPress={() => setTransactionStatus(2)}>
@@ -250,7 +250,7 @@ const AddTransaction = () => {
                           borderBottomColor: grey3,
                         }}
                       >
-                        <View style={{display: "flex", flexDirection: "row"}}>
+                        <View style={{ display: "flex", flexDirection: "row" }}>
                           <Image
                             style={[styles.icon, { marginRight: 10 }]}
                             source={categoryIconsMapper[item.icon_name]}
@@ -262,12 +262,12 @@ const AddTransaction = () => {
                   );
                 }
               })}
-              <Text style={{ 
-                fontSize: 20, 
-                fontWeight: "bold", 
-                marginLeft: 15, 
+              <Text style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                marginLeft: 15,
                 marginVertical: 20,
-                color: happy, 
+                color: happy,
               }}>
                 Incomes
               </Text>
@@ -290,7 +290,7 @@ const AddTransaction = () => {
                           borderBottomColor: grey3,
                         }}
                       >
-                        <View style={{display: "flex", flexDirection: "row"}}>
+                        <View style={{ display: "flex", flexDirection: "row" }}>
                           <Image
                             style={[styles.icon, { marginRight: 10 }]}
                             source={categoryIconsMapper[item.icon_name]}
@@ -306,7 +306,7 @@ const AddTransaction = () => {
           </ScrollView>
         </View>
       </Modal>
-      <DateTimePicker 
+      <DateTimePicker
         isVisible={datetimePickerModalVisible}
         onConfirm={onHandleDatetimePicked}
         onCancel={onToggleDatetimePicker}
@@ -321,7 +321,7 @@ const AddTransaction = () => {
           setWalletModalVisible(!walletModalVisible);
         }}
       >
-        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: Platform.OS === "ios" ? 16 : 0}}>
+        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: Platform.OS === "ios" ? 16 : 0 }}>
           <View
             style={{
               flexDirection: "row",
@@ -344,47 +344,47 @@ const AddTransaction = () => {
 
           <View>
             <View>
-                {walletList?.wallets
-                  ? walletList?.wallets.map((item, index) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          onGetWalletById(item.id);
-                        }}
-                        key={index}
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          backgroundColor: "#fff",
-                          marginBottom: 0,
-                          paddingVertical: 15,
-                          paddingHorizontal: 5,
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#eee"
-                        }}
-                      >
-                        <View
-                          style={{
-                            backgroundColor: "#fff",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            paddingHorizontal: 15,
-                            paddingVertical: 10,
-                          }}
-                        >
-                          <Image
-                            style={{ height: 40, width: 40, marginRight: 20 }}
-                            source={require("../assets/icons/ic_color_wallet.png")}
-                          />
-                          <View>
-                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
-                            <Text>{formatCurrency(item.balance)} đ</Text>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    ))
-                  : null}
-              </View>
+              {walletList?.wallets
+                ? walletList?.wallets.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      onGetWalletById(item.id);
+                    }}
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: "#fff",
+                      marginBottom: 0,
+                      paddingVertical: 15,
+                      paddingHorizontal: 5,
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#eee"
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "#fff",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingHorizontal: 15,
+                        paddingVertical: 10,
+                      }}
+                    >
+                      <Image
+                        style={{ height: 40, width: 40, marginRight: 20 }}
+                        source={require("../assets/icons/ic_color_wallet.png")}
+                      />
+                      <View>
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
+                        <Text>{formatCurrency(item.balance)} đ</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))
+                : null}
             </View>
+          </View>
         </ScrollView>
       </Modal>
     </SafeAreaView>
@@ -439,27 +439,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  iconHeader: { 
-    height: 15, 
-    width: 15, 
-    resizeMode: "contain" 
+  iconHeader: {
+    height: 15,
+    width: 15,
+    resizeMode: "contain"
   },
 
-  icon: { 
-    height: 20, 
-    width: 20, 
+  icon: {
+    height: 20,
+    width: 20,
     resizeMode: "contain",
   },
 
-  margin_right: { 
-    position: "absolute", 
-    right: 0, 
-    tintColor: grey3 
+  margin_right: {
+    position: "absolute",
+    right: 0,
+    tintColor: grey3
   },
 
   noteInputContainer: {
-    display: "flex", 
-    flexDirection: "row", 
+    display: "flex",
+    flexDirection: "row",
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     borderBottomWidth: 0.2,

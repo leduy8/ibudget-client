@@ -29,9 +29,10 @@ import { textContent } from "../configs/textContent";
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
-import { formatCurrency } from "../ultils/string";
+import { categoryIconsMapper, formatCurrency } from "../ultils/string";
 import { getTransactions, getTransactionById } from './../services/transaction';
 import { setUpdateSignal } from './../redux/actions/updateSignalAction';
+import { getDateDetails } from "../ultils/date";
 
 const Header = (props) => {
   const { onPress, walletName, balance } = props;
@@ -114,7 +115,8 @@ const Transactions = () => {
   const [walletBalance, setWalletBalance] = useState<any>();
   const [totalBalance, setTotalBalance] = useState<any>(0);
   const [transactionList, setTransactionList] = useState<any>({});
-  const [reformattedtransactionList, setReformattedTransactionList] = useState<any>({});
+  const [transactionGroupByDate, setTransactionGroupByDate] = useState<any>([]);
+  const [transactionDates, setTransactionDates] = useState<any>([]);
   const [focusTransaction, setFocusTransaction] = useState<any>({});
   const [inflow, setInflow] = useState(0);
   const [outflow, setOutflow] = useState(0);
@@ -152,9 +154,9 @@ const Transactions = () => {
   const onGetTransactions = async () => {
     const temp: any = await getTransactions(token);
     if (!temp.error_message) {
-      setTransactionList({...temp});
+      setTransactionList({ ...temp });
       onUpdateInOutBalance(temp);
-      onReformatTransactionList(temp);
+      onDistributeTransactionList(temp);
     }
   }
 
@@ -182,16 +184,24 @@ const Transactions = () => {
     return inflow - outflow;
   }
 
-  const onReformatTransactionList = (transactions) => {
-    let tempFormattedTransaction: object = {};
-    transactions.transactions.map(transaction => {
-      if (!tempFormattedTransaction[transaction.created_date]) {
-        tempFormattedTransaction[transaction.created_date] = [];
-      }
-      tempFormattedTransaction[transaction.created_date].push(transaction);
+  const onDistributeTransactionList = (transactions) => {
+    let temp: object = {};
+    let tempTransactionGroupByDate: Array<any> = [];
+    let tempTransactionDates: Array<any> = [];
+    let index = -1;
+
+    transactions.transactions.map((transaction, i) => {
+      if (!(transaction.created_date in temp)) {
+        temp[transaction.created_date] = "";
+        tempTransactionDates.push(getDateDetails(transaction.created_date));
+        tempTransactionGroupByDate.push([transaction]);
+        index += 1;
+      } else
+        tempTransactionGroupByDate[index].push(transaction);
     });
 
-    setReformattedTransactionList({...tempFormattedTransaction});
+    setTransactionGroupByDate([...tempTransactionGroupByDate]);
+    setTransactionDates([...tempTransactionDates]);
   }
 
   useEffect(() => {
@@ -220,15 +230,6 @@ const Transactions = () => {
       </Text>
     </TouchableOpacity>
   );
-
-  const renderTransaction = () => {
-    console.log("======================");
-    console.log(reformattedtransactionList);
-    const keys = Object.keys(reformattedtransactionList);
-    return (
-      <View></View>
-    );
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -277,7 +278,7 @@ const Transactions = () => {
             <Text>{formatCurrency(onInOutDifferences()) + " đ"}</Text>
           </View>
 
-          <TouchableOpacity onPress={() => {navigate(Routes.Report)}}>
+          <TouchableOpacity onPress={() => { navigate(Routes.Report) }}>
             <Text
               style={{ textAlign: "center", color: mainColor, marginTop: 5 }}
             >
@@ -286,51 +287,37 @@ const Transactions = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={{marginVertical: 10}}>
-          {renderTransaction()}
-          {/* <View style={{marginVertical: 10}}>
-            <View style={{ 
-              display: "flex", 
-              flexDirection: "row", 
-              alignItems: "center", 
-              backgroundColor: "#fff", 
-              borderBottomWidth: 1,
-              borderBottomColor: grey3,
-              paddingBottom: 10,
-            }}>
-              <Text style={{ 
-                fontSize: 35, 
-                fontWeight: "600", 
-                paddingLeft: 15,
-                paddingRight: 15,
-              }}>
-                24
-              </Text>
-              <View>
-                <Text>Wednesday</Text>
-                <Text>May 2022</Text>
-              </View>
-            </View>
+        <View style={{ marginVertical: 10 }}>
+          {(transactionGroupByDate.length > 0 && transactionDates.length > 0) ? transactionGroupByDate.map((transactionGroup, index) => {
+            return (
+              <View key={index} style={{ marginVertical: 10 }}>
+                <View style={styles.transactionGroupDate}>
+                  <Text style={styles.transactionGroupDay}>
+                    {transactionDates[index].day}
+                  </Text>
+                  <View>
+                    <Text>{transactionDates[index].weekday}</Text>
+                    <Text>{transactionDates[index].month + " " + transactionDates[index].year}</Text>
+                  </View>
+                </View>
 
-            <TouchableOpacity style={{
-              display: "flex", 
-              flexDirection: "row", 
-              justifyContent: "space-between", 
-              alignItems: "center",
-              backgroundColor: "#fff",
-              paddingHorizontal: 20,
-              paddingVertical: 20,
-            }}>
-              <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Image
-                  style={{ height: 30, width: 30, marginRight: 20 }}
-                  source={require("../assets/icons/ic_color_wallet.png")}
-                />
-                <Text style={{ fontSize: 15 }}>dasdasdas</Text>
+                {transactionGroup.map((transaction, index) => {
+                  return (
+                    <TouchableOpacity key={index} style={styles.transactionItem}>
+                      <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                        <Image
+                          style={{ height: 30, width: 30, marginRight: 20 }}
+                          source={categoryIconsMapper[`${transaction.category.icon_name}`]}
+                        />
+                        <Text style={{ fontSize: 15 }}>{transaction.category.name}</Text>
+                      </View>
+                      <Text>{formatCurrency(transaction.price)} đ</Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
-              <Text style={{  }}>100000 đ</Text>
-            </TouchableOpacity>
-          </View> */}
+            );
+          }) : null}
         </View>
       </ScrollView>
       <Modal
@@ -341,7 +328,7 @@ const Transactions = () => {
           setModalVisible(!modalVisible);
         }}
       >
-        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: Platform.OS === "ios" ? 16 : 0}}>
+        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: Platform.OS === "ios" ? 16 : 0 }}>
           <View
             style={{
               flexDirection: "row",
@@ -391,47 +378,47 @@ const Transactions = () => {
               INCLUDED IN TOTAL
             </Text>
             <View>
-                {walletList?.wallets
-                  ? walletList?.wallets.map((item, index) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          onGetWalletById(item.id);
-                        }}
-                        key={index}
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          backgroundColor: "#fff",
-                          marginBottom: 0,
-                          paddingVertical: 15,
-                          paddingHorizontal: 5,
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#eee"
-                        }}
-                      >
-                        <View
-                          style={{
-                            backgroundColor: "#fff",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            paddingHorizontal: 15,
-                            paddingVertical: 10,
-                          }}
-                        >
-                          <Image
-                            style={{ height: 40, width: 40, marginRight: 20 }}
-                            source={require("../assets/icons/ic_color_wallet.png")}
-                          />
-                          <View>
-                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
-                            <Text>{formatCurrency(item.balance)} đ</Text>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    ))
-                  : null}
-              </View>
+              {walletList?.wallets
+                ? walletList?.wallets.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      onGetWalletById(item.id);
+                    }}
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: "#fff",
+                      marginBottom: 0,
+                      paddingVertical: 15,
+                      paddingHorizontal: 5,
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#eee"
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "#fff",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingHorizontal: 15,
+                        paddingVertical: 10,
+                      }}
+                    >
+                      <Image
+                        style={{ height: 40, width: 40, marginRight: 20 }}
+                        source={require("../assets/icons/ic_color_wallet.png")}
+                      />
+                      <View>
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
+                        <Text>{formatCurrency(item.balance)} đ</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))
+                : null}
             </View>
+          </View>
 
           <View style={{ paddingTop: 20 }}>
             <Button
@@ -571,4 +558,31 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingLeft: 20,
   },
+
+  transactionGroupDate: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: grey3,
+    paddingVertical: 10,
+  },
+
+  transactionGroupDay: {
+    fontSize: 35,
+    fontWeight: "600",
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+
+  transactionItem: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  }
 });
