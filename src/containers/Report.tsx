@@ -167,11 +167,6 @@ const Report = () => {
             {pieChart(data)}
           </View>
         </View>
-
-        <Button buttonName="Debt" />
-        <Button buttonName="Loan" />
-        <Button buttonName="Debt" />
-        <Button buttonName="Other" />
       </ScrollView>
 
       {/* Modal */}

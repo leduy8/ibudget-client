@@ -24,11 +24,13 @@ import { grey3, placeholderTextColor, happy, frown } from "../configs/colors";
 import Routes from "../configs/routes";
 import { getCategories } from "../services/category";
 import { createTransaction } from "../services/transaction";
-import { getWalletById, transactInWallet } from "../services/wallet";
+import { getWalletById, getWallets, transactInWallet } from "../services/wallet";
 import { getDateJsonFormat, toDisplayDate } from "../ultils/date";
 import { categoryIconsMapper, formatCurrency } from "../ultils/string";
 import { setUpdateSignal } from './../redux/actions/updateSignalAction';
 import AlertPopUp from './../components/AlertPopUp';
+import { setFocusWallet } from "../redux/actions/focusWalletAction";
+import { setWalletList } from "../redux/actions/walletListAction";
 
 const AddTransaction = () => {
   const { navigate } = useNavigation();
@@ -69,6 +71,16 @@ const AddTransaction = () => {
     setWalletPicked(temp);
     setWalletModalVisible(!walletModalVisible);
   };
+
+  const onUpdateFocusWallet = async () => {
+    const temp: any = await getWalletById(token, focusWallet.id);
+    setFocusWallet(temp);
+  }
+
+  const onUpdateWalletList = async () => {
+    const temp: any = await getWallets(token);
+    setWalletList(temp);
+  }
 
   useEffect(() => {
     onGetCategories();
@@ -111,6 +123,8 @@ const AddTransaction = () => {
           if (returnedTransaction.error_message) {
             return AlertPopUp("Something went wrong", returnedTransaction.error_message);
           }
+          onUpdateFocusWallet();
+          onUpdateWalletList();
           setUpdateSignal(true);
           navigate(Routes.Transactions);
           setMoney(0);

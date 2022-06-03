@@ -21,4 +21,6 @@ export const getTransactionById = (token: any, id) => request.get(`/transactions
 
 export const createTransaction = (data: any, token: any) => request.post("/transactions", data, "POST", token);
 
+export const updateTransaction = (data: any, token: any, id: any) => request.put(`/transactions/${id}`, data, token);
+
 export const deleteTransaction = (token: any, id) => request.delete(`/transactions/${id}`, {}, token)

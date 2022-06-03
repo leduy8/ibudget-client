@@ -11,6 +11,8 @@ const Routes: any = {
     AccountDetails: "AccountDetails",
     ChangePassword: "ChangePassword",
     Learning: "Learning",
+    TransactionDetails: "TransactionDetails",
+    EditTransaction: "EditTransaction",
 };
 
 export default Routes;

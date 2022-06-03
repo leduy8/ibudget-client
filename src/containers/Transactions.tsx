@@ -34,6 +34,7 @@ import { getTransactions, getTransactionById } from './../services/transaction';
 import { setUpdateSignal } from './../redux/actions/updateSignalAction';
 import { getDateDetails } from "../ultils/date";
 import { delay } from "../ultils/time";
+import { setFocusTransaction } from './../redux/actions/focusTransactionAction';
 
 const Header = (props) => {
   const { onPress, walletName, balance } = props;
@@ -118,7 +119,6 @@ const Transactions = () => {
   const [transactionList, setTransactionList] = useState<any>({});
   const [transactionGroupByDate, setTransactionGroupByDate] = useState<any>([]);
   const [transactionDates, setTransactionDates] = useState<any>([]);
-  const [focusTransaction, setFocusTransaction] = useState<any>({});
   const [inflow, setInflow] = useState(0);
   const [outflow, setOutflow] = useState(0);
 
@@ -169,11 +169,6 @@ const Transactions = () => {
     }
   };
 
-  const onGetTransactionById = async (id) => {
-    const temp = await getTransactionById(token, id);
-    setFocusTransaction(temp);
-  };
-
   const onUpdateInOutBalance = (transactions) => {
     let tempInflow = 0;
     let tempOutflow = 0;
@@ -190,7 +185,7 @@ const Transactions = () => {
   };
 
   const onInOutDifferences = () => {
-    return inflow - outflow;
+    return inflow + outflow;
   };
 
   const onDistributeTransactionList = (transactions) => {
@@ -279,7 +274,7 @@ const Transactions = () => {
           <View style={styles.v_balance}>
             <Text>Outflow</Text>
             <Text style={{ position: "absolute", right: 15 }}>
-              -{formatCurrency(outflow)} đ
+              {formatCurrency(outflow)} đ
             </Text>
           </View>
           <View style={styles.v_result}>
@@ -311,7 +306,14 @@ const Transactions = () => {
 
                 {transactionGroup.map((transaction, index) => {
                   return (
-                    <TouchableOpacity key={index} style={styles.transactionItem}>
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.transactionItem}
+                      onPress={() => {
+                        setFocusTransaction(transaction);
+                        navigate(Routes.TransactionDetails);
+                      }}
+                    >
                       <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                         <Image
                           style={{ height: 30, width: 30, marginRight: 20 }}

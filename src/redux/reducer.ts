@@ -5,12 +5,14 @@ import dateRangeState from "./dateRange";
 import focusWalletState from './focusWallet';
 import walletListState from './walletList';
 import updateSignalState from './updateSignal';
+import focusTransactionState from './focusTransaction';
 
 const rootReducer = combineReducers({
   tokenState,
   userState,
   dateRangeState,
   focusWalletState,
+  focusTransactionState,
   walletListState,
   updateSignalState,
 });
