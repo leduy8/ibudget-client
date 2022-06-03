@@ -18,11 +18,11 @@ import { setUser } from "../../redux/actions/userAction";
 import { login } from "../../services/auth";
 import { getUser } from "./../../services/auth";
 import { mainColor, placeholderTextColor } from "../../configs/colors";
-import { setDateRange } from "../../redux/actions/dateRangeAction";
-import { getMonthsAndNBefore } from "../../ultils/date";
 import { setWalletList } from './../../redux/actions/walletListAction';
 import { getWallets } from "../../services/wallet";
 import { setFocusWallet } from "../../redux/actions/focusWalletAction";
+import { useSelector } from "react-redux";
+import { delay } from "../../ultils/time";
 
 const Login = () => {
   const { navigate } = useNavigation();
@@ -34,6 +34,7 @@ const Login = () => {
     mes: "",
   });
   const [turnOnLoading, setTurnOnLoading] = useState(false);
+  const { focusWallet } = useSelector((state: any) => state.focusWalletState);
 
   const onLogin = async () => {
     setValidateRegister({ status: false, mes: "" });
@@ -70,7 +71,6 @@ const Login = () => {
         password: password,
       });
       if (data?.access_token) {
-        setToken(data.access_token);
         const userData: any = await getUser(data.access_token);
         if (!userData?.error_message) {
           setUser(userData);
@@ -79,8 +79,8 @@ const Login = () => {
         if (!walletList?.error_message) {
           setWalletList(walletList);
           setFocusWallet(walletList.wallets[0] || {});
+          delay(2).then(() => setToken(data.access_token)).catch((err) => console.log(err));
         }
-        setDateRange(getMonthsAndNBefore(4));
       } else if (data?.error_message) {
         setTurnOnLoading(false);
         setValidateRegister({
@@ -125,16 +125,16 @@ const Login = () => {
           }}
         >
           {visiblePassword ? (
-              <Image
-                source={require("../../assets/icons/ic_eye.png")}
-                style={styles.icon}
-              ></Image>
-            ) : (
-              <Image
-                source={require("../../assets/icons/ic_eye_off.png")}
-                style={styles.icon}
-              ></Image>
-            )}
+            <Image
+              source={require("../../assets/icons/ic_eye.png")}
+              style={styles.icon}
+            ></Image>
+          ) : (
+            <Image
+              source={require("../../assets/icons/ic_eye_off.png")}
+              style={styles.icon}
+            ></Image>
+          )}
         </TouchableOpacity>
       </View>
 

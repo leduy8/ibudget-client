@@ -33,6 +33,7 @@ import { categoryIconsMapper, formatCurrency } from "../ultils/string";
 import { getTransactions, getTransactionById } from './../services/transaction';
 import { setUpdateSignal } from './../redux/actions/updateSignalAction';
 import { getDateDetails } from "../ultils/date";
+import { delay } from "../ultils/time";
 
 const Header = (props) => {
   const { onPress, walletName, balance } = props;
@@ -132,7 +133,7 @@ const Transactions = () => {
       totalBalanceTemp = totalBalanceTemp + walletList.wallets[i].balance;
     }
     setTotalBalance(totalBalanceTemp);
-  }
+  };
 
   const onGetWalletById = async (id) => {
     const temp: any = await getWalletById(token, id);
@@ -152,18 +153,26 @@ const Transactions = () => {
   };
 
   const onGetTransactions = async () => {
-    const temp: any = await getTransactions(token);
+    const fromDate = dateRange[selected]["year"] + "-" + dateRange[selected]["month"] + "-" + dateRange[selected]["dayStart"];
+    const toDate = dateRange[selected]["year"] + "-" + dateRange[selected]["month"] + "-" + dateRange[selected]["dayEnd"];
+    const params = {
+      "from_date": `${fromDate}`,
+      "to_date": `${toDate}`,
+      "title": `${dateRange[selected]["title"]}`,
+      "wallet_id": `${focusWallet.id}`,
+    };
+    const temp: any = await getTransactions(token, params);
     if (!temp.error_message) {
       setTransactionList({ ...temp });
       onUpdateInOutBalance(temp);
       onDistributeTransactionList(temp);
     }
-  }
+  };
 
   const onGetTransactionById = async (id) => {
     const temp = await getTransactionById(token, id);
     setFocusTransaction(temp);
-  }
+  };
 
   const onUpdateInOutBalance = (transactions) => {
     let tempInflow = 0;
@@ -178,11 +187,11 @@ const Transactions = () => {
 
     setInflow(tempInflow);
     setOutflow(tempOutflow);
-  }
+  };
 
   const onInOutDifferences = () => {
     return inflow - outflow;
-  }
+  };
 
   const onDistributeTransactionList = (transactions) => {
     let temp: object = {};
@@ -202,12 +211,12 @@ const Transactions = () => {
 
     setTransactionGroupByDate([...tempTransactionGroupByDate]);
     setTransactionDates([...tempTransactionDates]);
-  }
+  };
 
   useEffect(() => {
     onGetTransactions();
     setUpdateSignal(false);
-  }, [updateSignal]);
+  }, [updateSignal, selected, focusWallet]);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -252,8 +261,7 @@ const Transactions = () => {
           initialNumToRender={3}
           initialScrollIndex={4}
           onScrollToIndexFailed={(item) => {
-            const wait = new Promise((resolve) => setTimeout(resolve, 500));
-            wait.then(() => {
+            delay(500).then(() => {
               myList.current?.scrollToIndex({
                 index: dateRange.indexOf(item),
                 animated: true,
