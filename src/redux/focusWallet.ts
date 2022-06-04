@@ -1,8 +1,7 @@
 import { EnumActionType } from "./actionTypes";
-import { textContent } from './../configs/textContent';
 
 const initValue = {
-  focusWallet: {"name": textContent.TRANSACTIONS.CASH, "balance": 0},
+  focusWallet: {"name": "Cash", "balance": 0},
 };
 
 const focusWallet = (state = initValue, action: any) => {

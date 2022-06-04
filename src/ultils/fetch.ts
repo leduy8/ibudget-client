@@ -6,8 +6,10 @@ function getFullUrl(url: string | string[]) {
 }
 
 const get = (url: any, options = {}, token: any) => {
+  const fullUrl = getFullUrl(url);
+  
   return new Promise((resolve, reject) => {
-    fetch(getFullUrl(url), {
+    fetch(fullUrl, {
       ...options,
       method: "GET",
       headers: {
@@ -37,8 +39,10 @@ const get = (url: any, options = {}, token: any) => {
 };
 
 const post = (url: any, data: any, method = "POST", token: any) => {
+  const fullUrl = getFullUrl(url);
+  
   return new Promise((resolve, reject) => {
-    fetch(getFullUrl(url), {
+    fetch(fullUrl, {
       method: method,
       headers: {
         Accept: "application/json",

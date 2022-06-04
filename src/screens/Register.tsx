@@ -119,12 +119,12 @@ const Register = () => {
         >
           {visiblePassword ? (
             <Image
-              source={require("../../assets/icons/ic_eye.png")}
+              source={require("../assets/icons/ic_eye.png")}
               style={styles.icon}
             ></Image>
           ) : (
             <Image
-              source={require("../../assets/icons/ic_eye_off.png")}
+              source={require("../assets/icons/ic_eye_off.png")}
               style={styles.icon}
             ></Image>
           )}
@@ -162,7 +162,7 @@ const Register = () => {
         <View style={styles.v_modalError}>
           <View style={styles.v_modelErrorField}>
             <Image
-              source={require("../../assets/icons/ic_warning.png")}
+              source={require("../assets/icons/ic_warning.png")}
               style={styles.ic_warning}
             />
             <Text style={styles.txt_errorMes}>{validateLogin.mes}</Text>
