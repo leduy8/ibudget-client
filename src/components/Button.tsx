@@ -1,6 +1,5 @@
-import { grey3, grey1 } from "../configs/colors";
-import react from "react";
 import { TouchableOpacity, Text, StyleSheet, Image } from "react-native";
+import { grey3 } from "../configs/colors";
 
 export default function Button(props) {
   const { onPress, iconName, buttonName, customStylesContainer, customStylesText } = props;
@@ -37,8 +36,11 @@ const styles = StyleSheet.create({
     width: 20,
     marginRight: 10,
     resizeMode: 'contain'
-    // tintColor: grey1,
   },
 
-  margin_right: { position: "absolute", right: 0, tintColor: grey3 },
+  margin_right: {
+    position: "absolute",
+    right: 0,
+    tintColor: grey3
+  },
 });

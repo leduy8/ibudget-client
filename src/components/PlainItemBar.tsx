@@ -1,6 +1,5 @@
-import { grey3, grey1 } from "../configs/colors";
-import react from "react";
 import { Text, StyleSheet, Image, View } from "react-native";
+import { grey3 } from "../configs/colors";
 
 export default function PlainItemBar(props) {
   const { iconName, name, customStylesContainer, customStylesText, children } = props;
@@ -35,8 +34,11 @@ const styles = StyleSheet.create({
     width: 20,
     marginRight: 10,
     resizeMode: 'contain'
-    // tintColor: grey1,
   },
 
-  margin_right: { position: "absolute", right: 0, tintColor: grey3 },
+  margin_right: {
+    position: "absolute",
+    right: 0,
+    tintColor: grey3
+  },
 });
