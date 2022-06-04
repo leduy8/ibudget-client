@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   View,
   StyleSheet,
@@ -7,30 +8,27 @@ import {
   Image,
   TextInput,
   Text,
-  ImageBackground,
-  KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
-  Keyboard,
   SafeAreaView,
   ScrollView,
   Modal,
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { useSelector } from "react-redux";
-import Button from "../components/Button";
-import { grey3, placeholderTextColor, happy, frown } from "../configs/colors";
 import Routes from "../configs/routes";
+import { grey3, placeholderTextColor, happy, frown } from "../configs/colors";
 import { getCategories } from "../services/category";
 import { createTransaction } from "../services/transaction";
 import { getWalletById, getWallets, transactInWallet } from "../services/wallet";
 import { getDateJsonFormat, toDisplayDate } from "../ultils/date";
-import { categoryIconsMapper, formatCurrency } from "../ultils/string";
+import { formatCurrency } from "../ultils/string";
 import { setUpdateSignal } from './../redux/actions/updateSignalAction';
-import AlertPopUp from './../components/AlertPopUp';
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
+import { categoryIconsMapper } from './../ultils/mapper';
+import Button from "../components/Button";
+import AlertPopUp from './../components/AlertPopUp';
 
 const AddTransaction = () => {
   const { navigate } = useNavigation();
@@ -103,36 +101,39 @@ const AddTransaction = () => {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={{ position: "absolute", right: 0, paddingRight: 15 }} onPress={async () => {
-          let transaction = {
-            "price": focusCategory.type === "Expense" ? money * -1 : money,
-            "note": note,
-            "created_date": datePicked,
-            "category_id": focusCategory.id,
-            "wallet_id": walletPicked.id,
-          };
+        <TouchableOpacity
+          style={{ position: "absolute", right: 0, paddingRight: 15 }}
+          onPress={async () => {
+            let transaction = {
+              "price": focusCategory.type === "Expense" ? money * -1 : money,
+              "note": note,
+              "created_date": datePicked,
+              "category_id": focusCategory.id,
+              "wallet_id": walletPicked.id,
+            };
 
-          if (transactionStatus === 1) transaction["is_positive"] = true;
-          else if (transactionStatus === 2) transaction["is_positive"] = false;
+            if (transactionStatus === 1) transaction["is_positive"] = true;
+            else if (transactionStatus === 2) transaction["is_positive"] = false;
 
-          const returnedWalletAfterTransaction: any = await transactInWallet(token, transaction, walletPicked.id);
-          if (returnedWalletAfterTransaction.error_message) {
-            return AlertPopUp("Something went wrong", returnedWalletAfterTransaction.error_message);
-          }
-          const returnedTransaction: any = await createTransaction(transaction, token);
-          if (returnedTransaction.error_message) {
-            return AlertPopUp("Something went wrong", returnedTransaction.error_message);
-          }
-          onUpdateFocusWallet();
-          onUpdateWalletList();
-          setUpdateSignal(true);
-          navigate(Routes.Transactions);
-          setMoney(0);
-          setNote("");
-          setDatePicked(getDateJsonFormat(new Date().toISOString()));
-          setWalletPicked(focusWallet);
-          setTransactionStatus(0);
-        }}>
+            const returnedWalletAfterTransaction: any = await transactInWallet(token, transaction, walletPicked.id);
+            if (returnedWalletAfterTransaction.error_message) {
+              return AlertPopUp("Something went wrong", returnedWalletAfterTransaction.error_message);
+            }
+            const returnedTransaction: any = await createTransaction(transaction, token);
+            if (returnedTransaction.error_message) {
+              return AlertPopUp("Something went wrong", returnedTransaction.error_message);
+            }
+            onUpdateFocusWallet();
+            onUpdateWalletList();
+            setUpdateSignal(true);
+            navigate(Routes.Transactions);
+            setMoney(0);
+            setNote("");
+            setDatePicked(getDateJsonFormat(new Date().toISOString()));
+            setWalletPicked(focusWallet);
+            setTransactionStatus(0);
+          }}
+        >
           <Text>Save</Text>
         </TouchableOpacity>
       </View>
@@ -144,7 +145,9 @@ const AddTransaction = () => {
           </Text>
           <View style={styles.v_money}>
             <View style={styles.bt_money}>
-              <Text style={{ fontSize: 35, color: focusCategory.type === "Expense" ? frown : happy }}>{focusCategory.type === "Expense" ? "-" : "+"}</Text>
+              <Text style={{ fontSize: 35, color: focusCategory.type === "Expense" ? frown : happy }}>
+                {focusCategory.type === "Expense" ? "-" : "+"}
+              </Text>
             </View>
             <View style={styles.v_input_money}>
               <TextInput

@@ -1,20 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-
-import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
 import Routes from "../configs/routes";
-import Button from "../components/Button";
+import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
 import { textContent } from "../configs/textContent";
 import { TextInput } from "react-native-gesture-handler";
 import { changePassword } from "../services/password";
+import Button from "../components/Button";
 import AlertPopUp from "../components/AlertPopUp";
 
 const ChangePassword = (props) => {
     const { token } = useSelector((state: any) => state.tokenState);
     const { navigate } = useNavigation();
-
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [visiblePassword, setVisiblePassword] = useState(true);
@@ -22,7 +20,7 @@ const ChangePassword = (props) => {
 
     const onChangePassword = async () => {
         try {
-            await changePassword({password: password}, token);
+            await changePassword({ password: password }, token);
             console.log(token);
             AlertPopUp("", "Password changed successfully!");
             setPassword("");
@@ -30,7 +28,7 @@ const ChangePassword = (props) => {
             navigate(Routes.Account);
         } catch (error) {
             AlertPopUp("", "Something's wrong");
-        } 
+        }
     }
 
     return (
@@ -64,20 +62,18 @@ const ChangePassword = (props) => {
                     />
                     <TouchableOpacity
                         style={styles.showPasswordIcon}
-                        onPress={() => {
-                            setVisiblePassword(!visiblePassword);
-                        }}
-                        >
+                        onPress={() => setVisiblePassword(!visiblePassword)}
+                    >
                         {visiblePassword ? (
                             <Image
                                 source={require("../assets/icons/ic_eye.png")}
                                 style={styles.icon}
-                            ></Image>
-                            ) : (
+                            />
+                        ) : (
                             <Image
                                 source={require("../assets/icons/ic_eye_off.png")}
                                 style={styles.icon}
-                            ></Image>
+                            />
                         )}
                     </TouchableOpacity>
                 </View>
@@ -96,13 +92,13 @@ const ChangePassword = (props) => {
                         onPress={() => {
                             setVisibleConfirmPassword(!visibleConfirmPassword);
                         }}
-                        >
+                    >
                         {visibleConfirmPassword ? (
                             <Image
                                 source={require("../assets/icons/ic_eye.png")}
                                 style={styles.icon}
                             ></Image>
-                            ) : (
+                        ) : (
                             <Image
                                 source={require("../assets/icons/ic_eye_off.png")}
                                 style={styles.icon}
@@ -116,12 +112,10 @@ const ChangePassword = (props) => {
                     customStylesText={{ color: "#fff", textTransform: "uppercase", fontWeight: "700" }}
                     buttonName={textContent.CHANGE_PASSWORD.CONFIRM_PASSWORD}
                     onPress={() => {
-                        if (password !== password2) {
+                        if (password !== password2)
                             AlertPopUp("Invalid input", "Password and confirm password must be match.");
-                        }
-                        else {
-                            onChangePassword()
-                        }
+                        else
+                            onChangePassword();
                     }}
                 />
             </View>
@@ -146,10 +140,10 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
 
-    icon: { 
-        height: 15, 
-        width: 15, 
-        resizeMode: "contain" 
+    icon: {
+        height: 15,
+        width: 15,
+        resizeMode: "contain"
     },
 
     textInput: {

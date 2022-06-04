@@ -1,17 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import {
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    Image,
-    Text,
-    SafeAreaView,
-    ScrollView,
-    Modal,
-} from "react-native";
-import Routes from "../configs/routes";
+import { View, StyleSheet, TouchableOpacity, Image, Text, SafeAreaView, ScrollView, Modal, } from "react-native";
 import { PieChart } from "react-native-chart-kit";
+import { useNavigation } from "@react-navigation/native";
+import Routes from "../configs/routes";
 import { windowWidth } from "../configs/constants";
 import { chartColors, frown, grey1, grey3, happy } from "../configs/colors";
 import { useSelector } from "react-redux";
@@ -250,8 +241,9 @@ const Report = () => {
 
                 <View style={styles.v_padded}></View>
             </View>
+
+            {/* Chart view */}
             <ScrollView>
-                {/* Chart view */}
                 <View style={styles.pieChartContainer}>
                     <Text style={[styles.pieChartText, { color: frown }]}>Expense</Text>
                     <PieChart
@@ -334,7 +326,6 @@ const styles = StyleSheet.create({
     },
 
     v_header: {
-        // paddingTop: 10,
         backgroundColor: "#fff",
         height: 50,
         width: "100%",

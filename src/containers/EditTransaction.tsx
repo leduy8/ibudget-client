@@ -1,8 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, TouchableOpacity, View, Image, StyleSheet, Text, TouchableWithoutFeedback, TextInput, Modal, ScrollView, Platform } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import AlertPopUp from '../components/AlertPopUp';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Routes from "../configs/routes";
 import { setUpdateSignal } from '../redux/actions/updateSignalAction';
 import { getCategories } from '../services/category';
@@ -10,13 +11,13 @@ import { getWalletById, transactInWallet, getWallets } from '../services/wallet'
 import { getDateJsonFormat, toDisplayDate } from '../ultils/date';
 import { updateTransaction, deleteTransaction, createTransaction } from "../services/transaction";
 import { frown, grey3, happy, placeholderTextColor } from '../configs/colors';
-import { categoryIconsMapper, formatCurrency } from '../ultils/string';
-import Button from '../components/Button';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import DateTimePicker from 'react-native-modal-datetime-picker';
+import { formatCurrency } from '../ultils/string';
 import { setWalletList } from '../redux/actions/walletListAction';
 import { setFocusWallet } from './../redux/actions/focusWalletAction';
 import { delay } from './../ultils/time';
+import { categoryIconsMapper } from './../ultils/mapper';
+import Button from '../components/Button';
+import AlertPopUp from '../components/AlertPopUp';
 
 const EditTransaction = (props) => {
     const { navigate } = useNavigation();
@@ -71,16 +72,15 @@ const EditTransaction = (props) => {
 
     const onUpdateTransaction = async (transaction) => {
         const updatedMoney = focusCategory.type === "Expense" ? money * -1 : money;
-
-        const price = updatedMoney - focusTransaction.price;
         transaction["price"] = updatedMoney;
-        console.log(transaction);
+        const returnedWalletAfterTransaction: any = await transactInWallet(token, { "price": updatedMoney - focusTransaction.price }, walletPicked.id);
 
-        const returnedWalletAfterTransaction: any = await transactInWallet(token, { "price": price }, walletPicked.id);
         if (returnedWalletAfterTransaction.error_message) {
             return AlertPopUp("Something went wrong", returnedWalletAfterTransaction.error_message);
         }
+
         const returnedTransaction: any = await updateTransaction(transaction, token, focusTransaction.id);
+
         if (returnedTransaction.error_message) {
             return AlertPopUp("Something went wrong", returnedTransaction.error_message);
         }
@@ -466,12 +466,6 @@ const styles = StyleSheet.create({
         width: 15,
         resizeMode: "contain"
     },
-
-    // icon: {
-    //     height: 20,
-    //     width: 20,
-    //     resizeMode: "contain",
-    // },
 
     margin_right: {
         position: "absolute",

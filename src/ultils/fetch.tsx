@@ -23,8 +23,6 @@ const get = (url: any, options = {}, token: any) => {
       },
     })
       .then((res) => {
-        // console.log("____res", res);
-        // return res.json();
         if (String(res.status)[0] === "2" || String(res.status)[0] === "4") {
           return res.json();
         } else if (String(res.status)[0] === "1") {
@@ -36,12 +34,6 @@ const get = (url: any, options = {}, token: any) => {
         }
       })
       .then((resJson) => {
-        // if (resJson.message) {
-        //   reject(new Error(resJson.message));
-        // } else {
-        //   resolve(resJson);
-        // }
-
         resolve(resJson);
       })
       .catch((error) => {
@@ -56,7 +48,6 @@ const post = (url: any, data: any, method = "POST", token: any) => {
     const contentType = includes(url, "upload")
       ? "multipart/form-data"
       : "application/json";
-    // console.log(baseURL);
     fetch(baseURL, {
       method: method,
       headers: {
@@ -67,8 +58,6 @@ const post = (url: any, data: any, method = "POST", token: any) => {
       body: JSON.stringify(data),
     })
       .then((res) => {
-        // console.log("____res", res);
-        // return res.json();
         if (String(res.status)[0] === "2" || String(res.status)[0] === "4") {
           return res.json();
         } else if (String(res.status)[0] === "1") {
@@ -80,13 +69,6 @@ const post = (url: any, data: any, method = "POST", token: any) => {
         }
       })
       .then((resJson) => {
-        // console.log(resJson)
-        // if (resJson?.message) {
-        //   reject(resJson.message);
-        // }
-        // else {
-        //   resolve(resJson);
-        // }
         resolve(resJson);
       })
       .catch((error) => {

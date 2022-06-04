@@ -1,28 +1,14 @@
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  SafeAreaView,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
-import { grey1, grey2, grey3, mainColor } from "../configs/colors";
+import { View, StyleSheet, Text, SafeAreaView, ScrollView, ImageBackground } from "react-native";
 import Routes from "../configs/routes";
+import { grey1, grey3, mainColor } from "../configs/colors";
 import { textContent } from "../configs/textContent";
-import Button from "../components/Button";
 import { deleteToken } from "../redux/actions/tokenAction";
 import { useSelector } from 'react-redux';
+import Button from "../components/Button";
 
-const Bt_upgrade = () => {
+const ButtonUpgrade = () => {
   return (
     <View>
       <ImageBackground
@@ -43,13 +29,12 @@ const Bt_upgrade = () => {
 
 const Account = () => {
   const { navigate } = useNavigation();
-  const {user} = useSelector((state: any) => state.userState)
+  const { user } = useSelector((state: any) => state.userState)
 
-  const getName = (name: any) => {
+  const getAvatarInitial = (name: any) => {
     if (name != undefined && name != null && name != {}) {
-      var values = name.split(" ");
-      var letter = values[values.length - 1].charAt(0);
-      return letter;
+      const values = name.split(" ");
+      return values[values.length - 1].charAt(0);
     }
   };
 
@@ -58,7 +43,9 @@ const Account = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.v_account_detail}>
           <View style={styles.v_avatar}>
-            <Text style={{fontSize: 40, color: '#FFF', fontWeight: 'bold'}}>{getName(user?.name)}</Text>
+            <Text style={{ fontSize: 40, color: '#FFF', fontWeight: 'bold' }}>
+              {getAvatarInitial(user?.name)}
+            </Text>
           </View>
           <Text style={styles.txt_username}>{user?.name}</Text>
         </View>
@@ -69,7 +56,7 @@ const Account = () => {
           onPress={() => navigate(Routes.AccountDetails)}
         />
 
-        <Bt_upgrade />
+        <ButtonUpgrade />
 
         <Button
           iconName={require("../assets/icons/ic_wallet.png")}

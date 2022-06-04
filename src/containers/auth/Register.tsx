@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,16 +7,10 @@ import {
   Image,
   TextInput,
   Text,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
   SafeAreaView,
   Alert,
   Modal,
 } from "react-native";
-import Loading from "../../components/Loading";
 import { mainColor, placeholderTextColor } from "../../configs/colors";
 import Routes from "../../configs/routes";
 import { textContent } from "../../configs/textContent";
@@ -125,16 +119,16 @@ const Register = () => {
           }}
         >
           {visiblePassword ? (
-              <Image
-                source={require("../../assets/icons/ic_eye.png")}
-                style={styles.icon}
-              ></Image>
-            ) : (
-              <Image
-                source={require("../../assets/icons/ic_eye_off.png")}
-                style={styles.icon}
-              ></Image>
-            )}
+            <Image
+              source={require("../../assets/icons/ic_eye.png")}
+              style={styles.icon}
+            ></Image>
+          ) : (
+            <Image
+              source={require("../../assets/icons/ic_eye_off.png")}
+              style={styles.icon}
+            ></Image>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -269,7 +263,6 @@ const styles = StyleSheet.create({
     width: "70%",
     borderRadius: 10,
     backgroundColor: "#fff",
-    // justifyContent: 'center',
   },
 
   ic_warning: {

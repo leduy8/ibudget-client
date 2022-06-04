@@ -2,17 +2,16 @@ import React from "react";
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-
 import { grey3 } from "../configs/colors";
+import { textContent } from "../configs/textContent";
 import Routes from "../configs/routes";
 import Button from "../components/Button";
-import { textContent } from "../configs/textContent";
 
 const AccountDetails = (props) => {
     const { user } = useSelector((state: any) => state.userState)
     const { navigate } = useNavigation();
 
-    const getName = (name: any) => {
+    const getAvatarInitial = (name: any) => {
         if (name != undefined && name != null && name != {}) {
             var values = name.split(" ");
             var letter = values[values.length - 1].charAt(0);
@@ -41,7 +40,9 @@ const AccountDetails = (props) => {
 
             <View style={styles.v_account_detail}>
                 <View style={styles.v_avatar}>
-                    <Text style={{fontSize: 40, color: '#FFF', fontWeight: 'bold'}}>{getName(user?.name)}</Text>
+                    <Text style={{ fontSize: 40, color: '#FFF', fontWeight: 'bold' }}>
+                        {getAvatarInitial(user?.name)}
+                    </Text>
                 </View>
                 <Text style={styles.txt_username}>{user?.name}</Text>
             </View>
@@ -71,10 +72,10 @@ const styles = StyleSheet.create({
         borderColor: grey3,
     },
 
-    icon: { 
-        height: 15, 
-        width: 15, 
-        resizeMode: "contain" 
+    icon: {
+        height: 15,
+        width: 15,
+        resizeMode: "contain"
     },
 
     v_account_detail: {
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.3,
         borderBottomColor: grey3,
         backgroundColor: "#fff",
-      },
-    
+    },
+
     v_avatar: {
         height: 60,
         width: 60,

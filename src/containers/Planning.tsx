@@ -1,28 +1,17 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React from "react";
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   Image,
-  TextInput,
   Text,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { grey3 } from "../configs/colors";
 import { textContent } from "../configs/textContent";
-import Routes from "../configs/routes";
 import Button from "../components/Button";
 
 const Header = () => {
-  const { navigate } = useNavigation();
-
   return (
     <View style={styles.v_header}>
       <View style={styles.v_wallet}>
@@ -89,17 +78,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    // marginBottom: 10,
-    // paddingTop: 10,
   },
 
-  icon: { 
-    height: 17, 
-    width: 17, 
-    resizeMode: "contain" 
+  icon: {
+    height: 17,
+    width: 17,
+    resizeMode: "contain"
   },
 
-  v_header_name: { 
-    paddingHorizontal: 15 
+  v_header_name: {
+    paddingHorizontal: 15
   },
 });

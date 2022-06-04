@@ -1,16 +1,16 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { SafeAreaView, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
-import { frown, grey3, happy } from "../configs/colors";
-import Routes from "../configs/routes";
-import { categoryIconsMapper } from "../ultils/string";
-import PlainItemBar from './../components/PlainItemBar';
+import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Routes from "../configs/routes";
+import { frown, happy } from "../configs/colors";
+import { categoryIconsMapper } from "../ultils/mapper";
 import { toDisplayDate } from "../ultils/date";
-import ConfirmDialog from "../components/ConfirmDialog";
 import { deleteTransaction } from "../services/transaction";
 import { setUpdateSignal } from "../redux/actions/updateSignalAction";
+import ConfirmDialog from "../components/ConfirmDialog";
+import PlainItemBar from './../components/PlainItemBar';
 
 
 const TransactionDetails = (props) => {

@@ -10,7 +10,6 @@ import {
   SafeAreaView,
   Modal,
 } from "react-native";
-import Loading from "../../components/Loading";
 import Routes from "../../configs/routes";
 import { textContent } from "../../configs/textContent";
 import { setToken } from "../../redux/actions/tokenAction";
@@ -23,6 +22,7 @@ import { getWallets } from "../../services/wallet";
 import { setFocusWallet } from "../../redux/actions/focusWalletAction";
 import { useSelector } from "react-redux";
 import { delay } from "../../ultils/time";
+import Loading from "../../components/Loading";
 
 const Login = () => {
   const { navigate } = useNavigation();
@@ -34,7 +34,6 @@ const Login = () => {
     mes: "",
   });
   const [turnOnLoading, setTurnOnLoading] = useState(false);
-  const { focusWallet } = useSelector((state: any) => state.focusWalletState);
 
   const onLogin = async () => {
     setValidateRegister({ status: false, mes: "" });
@@ -139,9 +138,7 @@ const Login = () => {
       </View>
 
       <TouchableOpacity style={styles.bt_login} onPress={() => onLogin()}>
-        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>
-          Login
-        </Text>
+        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>Login</Text>
       </TouchableOpacity>
 
       <Text
@@ -259,7 +256,6 @@ const styles = StyleSheet.create({
     width: "70%",
     borderRadius: 10,
     backgroundColor: "#fff",
-    // justifyContent: 'center',
   },
 
   ic_warning: {

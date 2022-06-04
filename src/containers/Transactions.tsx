@@ -1,40 +1,22 @@
+import React, { useState, useEffect, useRef } from "react";
+import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text, Platform, SafeAreaView, ScrollView, FlatList, Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback, useEffect, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Text,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  SafeAreaView,
-  ScrollView,
-  FlatList,
-  Modal,
-} from "react-native";
-import Routes from './../configs/routes';
-import _ from "lodash";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { Border } from "victory-native";
-import Button from "../components/Button";
+import Routes from './../configs/routes';
 import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
 import { windowWidth } from "../configs/constants";
 import { textContent } from "../configs/textContent";
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
-import { categoryIconsMapper, formatCurrency } from "../ultils/string";
-import { getTransactions, getTransactionById } from './../services/transaction';
+import { formatCurrency } from "../ultils/string";
+import { getTransactions } from './../services/transaction';
 import { setUpdateSignal } from './../redux/actions/updateSignalAction';
 import { getDateDetails } from "../ultils/date";
 import { delay } from "../ultils/time";
 import { setFocusTransaction } from './../redux/actions/focusTransactionAction';
+import { categoryIconsMapper } from './../ultils/mapper';
+import Button from "../components/Button";
 
 const Header = (props) => {
   const { onPress, walletName, balance } = props;
@@ -63,22 +45,10 @@ const Header = (props) => {
         />
       </View>
       <View style={styles.v_header_balance}>
-        <Text
-          style={{
-            color: "#C2C2C2",
-            fontSize: 12,
-            textAlignVertical: "center",
-          }}
-        >
+        <Text style={{ color: "#C2C2C2", fontSize: 12, textAlignVertical: "center", }}>
           {walletName || textContent.TRANSACTIONS.CASH}
         </Text>
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 17,
-            textAlignVertical: "center",
-          }}
-        >
+        <Text style={{ fontWeight: "bold", fontSize: 17, textAlignVertical: "center", }}>
           {formatCurrency(balance) || 0} đ
         </Text>
       </View>
@@ -129,9 +99,10 @@ const Transactions = () => {
 
   const onSetTotalBalance = () => {
     let totalBalanceTemp = 0;
-    for (let i = 0; i < walletList.wallets.length; i++) {
+
+    for (let i = 0; i < walletList.wallets.length; i++)
       totalBalanceTemp = totalBalanceTemp + walletList.wallets[i].balance;
-    }
+
     setTotalBalance(totalBalanceTemp);
   };
 
@@ -142,10 +113,8 @@ const Transactions = () => {
   };
 
   const onCreateWallet = async () => {
-    const walletData = await createWallet(
-      { name: walletName, balance: walletBalance },
-      token
-    );
+    const walletData = await createWallet({ "name": walletName, "balance": walletBalance }, token);
+
     if (walletData) {
       onGetWallets();
       setToggleAddWallet(!toggleAddWallet);
@@ -178,12 +147,12 @@ const Transactions = () => {
   const onUpdateInOutBalance = (transactions) => {
     let tempInflow = 0;
     let tempOutflow = 0;
+
     transactions.transactions.map((transaction) => {
-      if (transaction.category.type === "Expense") {
+      if (transaction.category.type === "Expense")
         tempOutflow += transaction.price;
-      } else if (transaction.category.type === "Income") {
+      else if (transaction.category.type === "Income")
         tempInflow += transaction.price;
-      }
     });
 
     setInflow(tempInflow);
@@ -230,12 +199,7 @@ const Transactions = () => {
         setSelected(dateRange.indexOf(item));
       }}
     >
-      <Text
-        style={[
-          { fontSize: 15, color: "#BDBDBD" },
-          selected === dateRange.indexOf(item) && { color: "#000" },
-        ]}
-      >
+      <Text style={[{ fontSize: 15, color: "#BDBDBD" }, selected === dateRange.indexOf(item) && { color: "#000" }]}>
         {item.title}
       </Text>
     </TouchableOpacity>
@@ -288,9 +252,7 @@ const Transactions = () => {
           </View>
 
           <TouchableOpacity onPress={() => { navigate(Routes.Report) }}>
-            <Text
-              style={{ textAlign: "center", color: mainColor, marginTop: 5 }}
-            >
+            <Text style={{ textAlign: "center", color: mainColor, marginTop: 5 }}>
               View report for this period
             </Text>
           </TouchableOpacity>
@@ -498,7 +460,6 @@ const styles = StyleSheet.create({
   },
 
   v_header: {
-    // paddingTop: 10,
     backgroundColor: "#fff",
     height: 50,
     width: "100%",
@@ -528,7 +489,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  icon: { height: 22, width: 22, resizeMode: "contain" },
+  icon: {
+    height: 22,
+    width: 22,
+    resizeMode: "contain"
+  },
 
   v_monthItem: {
     width: windowWidth / 3,
