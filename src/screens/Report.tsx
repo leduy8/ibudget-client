@@ -8,7 +8,7 @@ import { chartColors, frown, grey1, grey3, happy } from "../configs/colors";
 import { useSelector } from "react-redux";
 import { getReportDates, toDisplayDate } from "../ultils/date";
 import { getTransactions } from "../services/transaction";
-import { sortArrayObjectByKey } from './../ultils/array';
+import { sortArrayObjectByKey } from '../ultils/array';
 import { chartConfig } from "../configs/chart";
 import { expenseMapper, incomeMapper } from "../ultils/mapper";
 

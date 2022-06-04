@@ -2,19 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text, Platform, SafeAreaView, ScrollView, FlatList, Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import Routes from './../configs/routes';
+import Routes from '../configs/routes';
 import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
 import { windowWidth } from "../configs/app";
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
 import { formatCurrency } from "../ultils/string";
-import { getTransactions } from './../services/transaction';
-import { setUpdateSignal } from './../redux/actions/updateSignalAction';
+import { getTransactions } from '../services/transaction';
+import { setUpdateSignal } from '../redux/actions/updateSignalAction';
 import { getDateDetails } from "../ultils/date";
 import { delay } from "../ultils/time";
-import { setFocusTransaction } from './../redux/actions/focusTransactionAction';
-import { categoryIconsMapper } from './../ultils/mapper';
+import { setFocusTransaction } from '../redux/actions/focusTransactionAction';
+import { categoryIconsMapper } from '../ultils/mapper';
 import Button from "../components/Button";
 
 const Header = (props) => {

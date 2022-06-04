@@ -3,14 +3,14 @@ import React, { memo } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Routes from "../configs/routes";
 import MainTab from "./MainTab";
-import Register from "../containers/auth/Register";
-import Login from "../containers/auth/Login";
-import WalletList from "../containers/WalletList";
-import AccountDetails from "../containers/AccountDetails";
-import ChangePassword from '../containers/ChangePassword';
-import Report from "../containers/Report";
-import TransactionDetails from './../containers/TransactionDetail';
-import EditTransaction from "../containers/EditTransaction";
+import Register from "../screens/Register";
+import Login from "../screens/Login";
+import WalletList from "../screens/WalletList";
+import AccountDetails from "../screens/AccountDetails";
+import ChangePassword from '../screens/ChangePassword';
+import Report from "../screens/Report";
+import TransactionDetails from '../screens/TransactionDetail';
+import EditTransaction from "../screens/EditTransaction";
 
 const Stack = createStackNavigator();
 

@@ -13,9 +13,9 @@ import { updateTransaction, deleteTransaction, createTransaction } from "../serv
 import { frown, grey3, happy, placeholderTextColor } from '../configs/colors';
 import { formatCurrency } from '../ultils/string';
 import { setWalletList } from '../redux/actions/walletListAction';
-import { setFocusWallet } from './../redux/actions/focusWalletAction';
-import { delay } from './../ultils/time';
-import { categoryIconsMapper } from './../ultils/mapper';
+import { setFocusWallet } from '../redux/actions/focusWalletAction';
+import { delay } from '../ultils/time';
+import { categoryIconsMapper } from '../ultils/mapper';
 import Button from '../components/Button';
 import AlertPopUp from '../components/AlertPopUp';
 

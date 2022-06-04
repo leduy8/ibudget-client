@@ -10,7 +10,7 @@ import { toDisplayDate } from "../ultils/date";
 import { deleteTransaction } from "../services/transaction";
 import { setUpdateSignal } from "../redux/actions/updateSignalAction";
 import ConfirmDialog from "../components/ConfirmDialog";
-import PlainItemBar from './../components/PlainItemBar';
+import PlainItemBar from '../components/PlainItemBar';
 
 
 const TransactionDetails = (props) => {

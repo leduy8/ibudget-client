@@ -23,12 +23,12 @@ import { createTransaction } from "../services/transaction";
 import { getWalletById, getWallets, transactInWallet } from "../services/wallet";
 import { getDateJsonFormat, toDisplayDate } from "../ultils/date";
 import { formatCurrency } from "../ultils/string";
-import { setUpdateSignal } from './../redux/actions/updateSignalAction';
+import { setUpdateSignal } from '../redux/actions/updateSignalAction';
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
-import { categoryIconsMapper } from './../ultils/mapper';
+import { categoryIconsMapper } from '../ultils/mapper';
 import Button from "../components/Button";
-import AlertPopUp from './../components/AlertPopUp';
+import AlertPopUp from '../components/AlertPopUp';
 
 const AddTransaction = () => {
   const { navigate } = useNavigation();

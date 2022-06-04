@@ -8,25 +8,32 @@ import {
   TextInput,
   Text,
   SafeAreaView,
-  Alert,
   Modal,
 } from "react-native";
-import { mainColor, placeholderTextColor } from "../../configs/colors";
-import Routes from "../../configs/routes";
-import { reigster } from "../../services/auth";
+import Routes from "../configs/routes";
+import { setToken } from "../redux/actions/tokenAction";
+import { setUser } from "../redux/actions/userAction";
+import { login } from "../services/auth";
+import { getUser } from "../services/auth";
+import { mainColor, placeholderTextColor } from "../configs/colors";
+import { setWalletList } from '../redux/actions/walletListAction';
+import { getWallets } from "../services/wallet";
+import { setFocusWallet } from "../redux/actions/focusWalletAction";
+import { delay } from "../ultils/time";
+import Loading from "../components/Loading";
 
-const Register = () => {
+const Login = () => {
   const { navigate } = useNavigation();
   const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [visiblePassword, setVisiblePassword] = useState(true);
   const [validateLogin, setValidateRegister] = useState({
     status: false,
     mes: "",
   });
+  const [turnOnLoading, setTurnOnLoading] = useState(false);
 
-  const onRegister = async () => {
+  const onLogin = async () => {
     setValidateRegister({ status: false, mes: "" });
     if (
       username.trim() === null ||
@@ -55,29 +62,24 @@ const Register = () => {
       return;
     }
 
-    if (name.trim() === null || name.trim() === "" || name.length < 2) {
-      setValidateRegister({
-        ...validateLogin,
-        status: true,
-        mes: "Invalid name",
-      });
-      return;
-    }
-
     if (!validateLogin.status) {
-      const data: any = await reigster({
+      const data: any = await login({
         username: username,
         password: password,
-        name: name,
       });
-      console.log(data);
-      if (data?.message === "User has been created successfully") {
-        Alert.alert("User has created successfully");
-        setUsername("");
-        setPassword("");
-        setName("");
-        navigate(Routes.Login);
+      if (data?.access_token) {
+        const userData: any = await getUser(data.access_token);
+        if (!userData?.error_message) {
+          setUser(userData);
+        }
+        const walletList: any = await getWallets(data.access_token);
+        if (!walletList?.error_message) {
+          setWalletList(walletList);
+          setFocusWallet(walletList.wallets[0] || {});
+          delay(2).then(() => setToken(data.access_token)).catch((err) => console.log(err));
+        }
       } else if (data?.error_message) {
+        setTurnOnLoading(false);
         setValidateRegister({
           ...validateLogin,
           status: true,
@@ -89,7 +91,9 @@ const Register = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.txt_header}>Register</Text>
+      {turnOnLoading ? <Loading></Loading> : null}
+
+      <Text style={styles.txt_header}>Ibudget</Text>
 
       <View style={styles.textInput}>
         <TextInput
@@ -131,25 +135,15 @@ const Register = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.textInput}>
-        <TextInput
-          style={styles.inputField}
-          placeholderTextColor={placeholderTextColor}
-          placeholder={"Name"}
-          value={name}
-          onChangeText={(text) => setName(text)}
-        ></TextInput>
-      </View>
-
-      <TouchableOpacity style={styles.bt_login} onPress={() => onRegister()}>
-        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>Register</Text>
+      <TouchableOpacity style={styles.bt_login} onPress={() => onLogin()}>
+        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>Login</Text>
       </TouchableOpacity>
 
       <Text
         style={[styles.txt_register, { textAlign: "center" }]}
-        onPress={() => navigate(Routes.Login)}
+        onPress={() => navigate(Routes.Register)}
       >
-        Login
+        Register
       </Text>
       <Modal
         animationType="slide"
@@ -178,7 +172,7 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
 
 const styles = StyleSheet.create({
   container: {

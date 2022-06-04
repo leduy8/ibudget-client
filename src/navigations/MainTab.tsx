@@ -1,50 +1,42 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { TabActions, useNavigation } from "@react-navigation/native";
-import Routes from "../configs/routes";
 import { View, StyleSheet, Image, TouchableOpacity, Text } from "react-native";
-import Transactions from "../containers/Transactions";
-import Report from "../containers/Report";
-import Planning from "../containers/Planning";
-import Account from "../containers/Account";
-import AddTransaction from "../containers/AddTransaction";
-import Learning from "../containers/Learning";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Routes from "../configs/routes";
+import Transactions from "../screens/Transactions";
+import Planning from "../screens/Planning";
+import Account from "../screens/Account";
+import AddTransaction from "../screens/AddTransaction";
+import Learning from "../screens/Learning";
 import { mainColor } from "../configs/colors";
 
 const Tab = createBottomTabNavigator();
 
-const CustomQrScanButton = ({ children, onPress }) => (
+const CustomQrScanButton: any = ({ children, onPress }) => (
   <TouchableOpacity
     style={{
       justifyContent: "center",
       alignItems: "center",
-      //...styles.shadow
     }}
     onPress={onPress}
   >
-    <View
-      style={{
-        width: 50,
-        height: 50,
-        borderRadius: 30,
-        backgroundColor: mainColor,
-        marginBottom: 30,
-      }}
-    >
+    <View style={{
+      width: 50,
+      height: 50,
+      borderRadius: 30,
+      backgroundColor: mainColor,
+      marginBottom: 30,
+    }}>
       {children}
     </View>
   </TouchableOpacity>
 );
 
 const MainTab = () => {
-  const { navigate } = useNavigation();
-
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: [
           styles.tabBarStyle,
-          // {...styles.shadow}
         ],
       }}
     >
@@ -64,15 +56,13 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text
-                style={[styles.txt_navText, focused && { color: "#212121" }]}
-              >
+              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
                 {Routes.Transactions}
               </Text>
             </View>
           ),
         }}
-      ></Tab.Screen>
+      />
       <Tab.Screen
         name={Routes.Planning}
         component={Planning}
@@ -89,15 +79,13 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text
-                style={[styles.txt_navText, focused && { color: "#212121" }]}
-              >
+              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
                 {Routes.Planning}
               </Text>
             </View>
           ),
         }}
-      ></Tab.Screen>
+      />
       <Tab.Screen
         name={Routes.AddTransaction}
         component={AddTransaction}
@@ -120,11 +108,10 @@ const MainTab = () => {
           tabBarButton: (props) => (
             <CustomQrScanButton
               {...props}
-              // onPress={() => navigate()}
             />
           ),
         }}
-      ></Tab.Screen>
+      />
       <Tab.Screen
         name={Routes.Learning}
         component={Learning}
@@ -141,15 +128,13 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text
-                style={[styles.txt_navText, focused && { color: "#212121" }]}
-              >
+              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
                 {Routes.Learning}
               </Text>
             </View>
           ),
         }}
-      ></Tab.Screen>
+      />
       <Tab.Screen
         name={Routes.Account}
         component={Account}
@@ -166,15 +151,13 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text
-                style={[styles.txt_navText, focused && { color: "#212121" }]}
-              >
+              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
                 {Routes.Account}
               </Text>
             </View>
           ),
         }}
-      ></Tab.Screen>
+      />
     </Tab.Navigator>
   );
 };
@@ -198,7 +181,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 10,
-    // elevation: 3,
   },
 
   txt_navText: {
@@ -211,6 +193,5 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: 'red'
   },
 });
