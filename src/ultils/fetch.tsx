@@ -1,25 +1,19 @@
-import { API } from "../configs/constants";
+import { baseUrl } from "../configs/api";
 import includes from "lodash/includes";
 
-function generalUrl(url: string | string[]) {
-  let baseURL = API + url;
-  return {
-    baseURL,
-  };
+function getFullUrl(url: string | string[]) {
+  return baseUrl + url;
 }
 
 const get = (url: any, options = {}, token: any) => {
   return new Promise((resolve, reject) => {
-    const { baseURL } = generalUrl(url);
-    const contentType = "application/json";
-    // console.log(baseURL);
-    fetch(baseURL, {
+    fetch(getFullUrl(url), {
       ...options,
       method: "GET",
       headers: {
-        Accept: "application/json",
-        "Content-Type": contentType,
-        Authorization: token ? `Bearer ${token}` : null,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : null,
       },
     })
       .then((res) => {
@@ -44,16 +38,12 @@ const get = (url: any, options = {}, token: any) => {
 
 const post = (url: any, data: any, method = "POST", token: any) => {
   return new Promise((resolve, reject) => {
-    const { baseURL } = generalUrl(url);
-    const contentType = includes(url, "upload")
-      ? "multipart/form-data"
-      : "application/json";
-    fetch(baseURL, {
+    fetch(getFullUrl(url), {
       method: method,
       headers: {
         Accept: "application/json",
         Authorization: token ? `Bearer ${token}` : null,
-        "Content-Type": contentType,
+        "Content-Type": includes(url, "upload") ? "multipart/form-data" : "application/json",
       },
       body: JSON.stringify(data),
     })

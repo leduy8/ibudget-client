@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Image, Text, SafeAreaView, ScrollVi
 import { PieChart } from "react-native-chart-kit";
 import { useNavigation } from "@react-navigation/native";
 import Routes from "../configs/routes";
-import { windowWidth } from "../configs/constants";
+import { windowWidth } from "../configs/app";
 import { chartColors, frown, grey1, grey3, happy } from "../configs/colors";
 import { useSelector } from "react-redux";
 import { getReportDates, toDisplayDate } from "../ultils/date";

@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import Routes from './../configs/routes';
 import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
-import { windowWidth } from "../configs/constants";
+import { windowWidth } from "../configs/app";
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
