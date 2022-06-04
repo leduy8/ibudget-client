@@ -1,301 +1,428 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Text,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  SafeAreaView,
-  ScrollView,
-  Modal,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    Text,
+    SafeAreaView,
+    ScrollView,
+    Modal,
 } from "react-native";
-import { textContent } from "../configs/textContent";
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryTheme,
-  VictoryPie,
-} from "victory-native";
-import { Svg, Circle } from "react-native-svg";
+import Routes from "../configs/routes";
+import { PieChart } from "react-native-chart-kit";
 import { windowWidth } from "../configs/constants";
-import { grey1, grey2, grey3 } from "../configs/colors";
-import Button from "../components/Button";
+import { chartColors, frown, grey1, grey3, happy } from "../configs/colors";
+import { useSelector } from "react-redux";
+import { getReportDates, toDisplayDate } from "../ultils/date";
+import { getTransactions } from "../services/transaction";
+import { sortArrayObjectByKey } from './../ultils/array';
+import { chartConfig } from "../configs/chart";
+import { expenseMapper, incomeMapper } from "../ultils/mapper";
 
-const data = [
-  { quarter: 1, earnings: 50000 },
-  { quarter: 2, earnings: 16500 },
-  { quarter: 3, earnings: 14250 },
-  { quarter: 4, earnings: 10000 },
-];
+function getTop4AndOthers(array: Array<any>) {
+    let resArr = array.slice(0, 4);
+    let remainArr = array.slice(4);
 
-const data2 = [{ quarter: " ", earnings: 50000 }];
+    resArr.push({
+        name: "Others",
+        price: 0,
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 15,
+    });
 
-const timeData = [
-  { id: 1, name: "This month", date: "01/04/2022 - 30/04/2022" },
-  { id: 2, name: "Last month", date: "01/03/2022 - 31/03/2022" },
-  { id: 3, name: "Last 3 month", date: "01/02/2022 - 30/04/2022" },
-  { id: 4, name: "Last 6 month", date: "01/11/2021 - 30/04/2022" },
-];
+    remainArr.map((item) => {
+        if (item.name in incomeMapper)
+            resArr[4].price += item.price;
+        else if (item.name in expenseMapper)
+            resArr[4].price += item.price * -1;
+    });
 
-const pieChart = (value: any) => {
-  return (
-    <Svg width={170} height={170}>
-      <Circle cx={85} cy={85} r={23} fill="#2f2f2f"></Circle>
-      <Circle cx={85} cy={85} r={16} fill="#fff"></Circle>
-      <VictoryPie
-        standalone={false}
-        width={170}
-        height={170}
-        colorScale={["#2B4A5C", "#32C5A8", "#09ABEB", "#EFC028", "#F98F6D"]}
-        innerRadius={23}
-        data={value}
-        x="quarter"
-        y="earnings"
-      />
-    </Svg>
-  );
-};
+    resArr.map((item, index) => item["color"] = chartColors[index]);
+
+    return resArr;
+}
 
 const Report = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [timeRange, setTimeRange] = useState(timeData[0]);
+    const timeData = getReportDates();
+    const { navigate } = useNavigation();
+    const [timeRange, setTimeRange] = useState(timeData[0]);
+    const { token } = useSelector((state: any) => state.tokenState);
+    const { focusWallet } = useSelector((state: any) => state.focusWalletState);
+    const [expenseByCategory, setExpenseByCategory] = useState([]);
+    const [incomeByCategory, setIncomeByCategory] = useState([]);
+    const [dateRangeModalVisible, setDateRangeModalVisible] = useState(false);
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {/* Header here */}
-        <View style={styles.v_header}>
-          <View style={styles.v_wallet}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#364E5C",
-                padding: 8,
-                borderRadius: 30,
-              }}
-            >
-              <Image
-                style={styles.icon}
-                source={require("../assets/icons/ic_color_wallet.png")}
-              />
-            </TouchableOpacity>
-            <Image
-              style={{
-                height: 12,
-                width: 12,
-                resizeMode: "contain",
-                marginLeft: 8,
-                tintColor: "#C2C2C2",
-              }}
-              source={require("../assets/icons/ic_down_arrow.png")}
-            />
-          </View>
+    const onGetTotalTransactionByCategory = (data) => {
+        let totalExpenseByCategory: any = [
+            {
+                name: "Transportation",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Gifts & Donation",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Food & Beverage",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Bills",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Shopping",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Friends & Lover",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Entertainment",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Travel",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Health & Fitness",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Family",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Education",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Investment",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Business",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Other Expense",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            }
+        ];
 
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            style={styles.v_time_range}
-          >
-            <View style={{ alignItems: "center" }}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 17,
-                  textAlignVertical: "center",
-                }}
-              >
-                {timeRange.name}
-              </Text>
-              <Text
-                style={{
-                  color: "#C2C2C2",
-                  fontSize: 12,
-                  textAlignVertical: "center",
-                }}
-              >
-                {timeRange.date}
-              </Text>
-            </View>
-            <Image
-              style={{
-                height: 12,
-                width: 12,
-                resizeMode: "contain",
-                marginLeft: 8,
-                tintColor: "#C2C2C2",
-              }}
-              source={require("../assets/icons/ic_down_arrow.png")}
-            />
-          </TouchableOpacity>
+        let totalIncomeByCategory: any = [
+            {
+                name: "Salary",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Selling",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Interest Money",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Gifts",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Awards",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Funding",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+            {
+                name: "Other Income",
+                price: 0,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+            },
+        ];
 
-          <View style={styles.v_noti}>
-            <TouchableOpacity>
-              <Image
-                style={styles.icon}
-                source={require("../assets/icons/ic_share.png")}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        data.transactions.map((transaction) => {
+            if (transaction.category.type === "Expense")
+                totalExpenseByCategory[expenseMapper[transaction.category.name]].price += transaction.price * -1;
+            else if (transaction.category.type === "Income")
+                totalIncomeByCategory[incomeMapper[transaction.category.name]].price += transaction.price;
+        });
 
-        {/* Chart view */}
-        <View style={styles.v_pieChart}>
-          <View
-            style={[
-              styles.v_chart_container,
-              { borderRightWidth: 1, borderColor: grey2 },
-            ]}
-          >
-            <Text style={styles.txt_chart_name}>Income</Text>
-            <Text style={[styles.txt_chart_value, { color: "blue" }]}>
-              0.00
-            </Text>
+        totalExpenseByCategory = sortArrayObjectByKey(totalExpenseByCategory, "price", false);
+        totalExpenseByCategory = getTop4AndOthers(totalExpenseByCategory);
 
-            {pieChart(data2)}
-          </View>
-          <View style={styles.v_chart_container}>
-            <Text style={styles.txt_chart_name}>Expense</Text>
-            <Text style={[styles.txt_chart_value, { color: "red" }]}>
-              50,000.00
-            </Text>
+        totalIncomeByCategory = sortArrayObjectByKey(totalIncomeByCategory, "price", false);
+        totalIncomeByCategory = getTop4AndOthers(totalIncomeByCategory);
 
-            {pieChart(data)}
-          </View>
-        </View>
-      </ScrollView>
+        setExpenseByCategory([...totalExpenseByCategory]);
+        setIncomeByCategory([...totalIncomeByCategory]);
+    }
 
-      {/* Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
+    const onGetTransactions = async () => {
+        const params = {
+            "from_date": timeRange["dateStart"],
+            "to_date": timeRange["dateEnd"],
+            "wallet_id": focusWallet.id,
+        };
+        const data: any = await getTransactions(token, params);
+
+        onGetTotalTransactionByCategory(data);
+    }
+
+    useEffect(() => {
+        onGetTransactions();
+    }, [timeRange]);
+
+    return (
         <SafeAreaView style={styles.container}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 50,
-              backgroundColor: "#fff",
-              borderBottomWidth: 1,
-              borderColor: grey3,
-            }}
-          >
-            <Text
-              style={{ position: "absolute", left: 0, paddingLeft: 15 }}
-              onPress={() => setModalVisible(false)}
-            >
-              Close
-            </Text>
-            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-              Select Time Range
-            </Text>
-          </View>
+            {/* Header here */}
+            <View style={styles.v_header}>
+                <View style={styles.v_back}>
+                    <TouchableOpacity onPress={() => navigate(Routes.Transactions)}>
+                        <Image
+                            style={styles.iconSmall}
+                            source={require("../assets/icons/ic_arrow_left.png")}
+                        />
+                    </TouchableOpacity>
+                </View>
 
-          <ScrollView style={{ backgroundColor: "#fff", width: "100%" }}>
-            {timeData.map((item) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setTimeRange(item);
-                  setModalVisible(false);
+                <TouchableOpacity
+                    onPress={() => setDateRangeModalVisible(true)}
+                    style={styles.v_time_range}
+                >
+                    <View style={{ alignItems: "center" }}>
+                        <Text style={styles.titleScrollHeader}>{timeRange.title}</Text>
+                        <Text style={{ color: "#C2C2C2", fontSize: 12, textAlignVertical: "center" }}>
+                            {toDisplayDate(timeRange.dateStart)} - {toDisplayDate(timeRange.dateEnd)}
+                        </Text>
+                    </View>
+                    <Image
+                        style={styles.iconScrollHeader}
+                        source={require("../assets/icons/ic_down_arrow.png")}
+                    />
+                </TouchableOpacity>
+
+                <View style={styles.v_padded}></View>
+            </View>
+            <ScrollView>
+                {/* Chart view */}
+                <View style={styles.pieChartContainer}>
+                    <Text style={[styles.pieChartText, { color: frown }]}>Expense</Text>
+                    <PieChart
+                        data={expenseByCategory}
+                        width={windowWidth}
+                        height={220}
+                        chartConfig={chartConfig}
+                        accessor={"price"}
+                        backgroundColor={"#fff"}
+                        paddingLeft={"15"}
+                    />
+                </View>
+                <View style={styles.pieChartContainer}>
+                    <Text style={[styles.pieChartText, { color: happy }]}>Income</Text>
+                    <PieChart
+                        data={incomeByCategory}
+                        width={windowWidth}
+                        height={220}
+                        chartConfig={chartConfig}
+                        accessor={"price"}
+                        backgroundColor={"#fff"}
+                        paddingLeft={"15"}
+                    />
+                </View>
+            </ScrollView>
+
+            {/* Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={dateRangeModalVisible}
+                onRequestClose={() => {
+                    setDateRangeModalVisible(!dateRangeModalVisible);
                 }}
-                key={item.id}
-                style={{
-                  width: "100%",
-                  justifyContent: "center",
-                  marginHorizontal: 15,
-                  borderBottomWidth: 1,
-                  borderColor: grey3,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                }}
-              >
-                <Text style={{ color: "#000", fontSize: 17, marginBottom: 5 }}>
-                  {item.name}
-                </Text>
-                <Text style={{ color: grey1 }}>{item.date}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+            >
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.modalViewContainer}>
+                        <Text
+                            style={{ position: "absolute", left: 0, paddingLeft: 15 }}
+                            onPress={() => setDateRangeModalVisible(false)}
+                        >
+                            Close
+                        </Text>
+                        <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                            Select Time Range
+                        </Text>
+                    </View>
+
+                    <ScrollView style={{ backgroundColor: "#fff", width: "100%" }}>
+                        {timeData.map((item) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setTimeRange(item);
+                                    setDateRangeModalVisible(false);
+                                }}
+                                key={item.id}
+                                style={styles.modalItem}
+                            >
+                                <Text style={{ color: "#000", fontSize: 17, marginBottom: 5 }}>
+                                    {item.title}
+                                </Text>
+                                <Text style={{ color: grey1 }}>
+                                    {toDisplayDate(item.dateStart)} - {toDisplayDate(item.dateEnd)}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </SafeAreaView>
+            </Modal>
         </SafeAreaView>
-      </Modal>
-    </SafeAreaView>
-  );
+    );
 };
 
 export default Report;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F2F2F2",
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#F2F2F2",
+    },
 
-  v_header: {
-    // paddingTop: 10,
-    backgroundColor: "#fff",
-    height: 50,
-    width: "100%",
-    flexDirection: "row",
-    paddingHorizontal: 15,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    v_header: {
+        // paddingTop: 10,
+        backgroundColor: "#fff",
+        height: 50,
+        width: "100%",
+        flexDirection: "row",
+        paddingHorizontal: 15,
+        justifyContent: "center",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: grey3,
+    },
 
-  v_wallet: {
-    flex: 0.2,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
+    v_padded: {
+        flex: 0.2,
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "center",
+    },
 
-  v_time_range: {
-    flex: 0.6,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-  },
+    v_time_range: {
+        flex: 0.6,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
 
-  v_noti: {
-    flex: 0.2,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
+    v_back: {
+        flex: 0.2,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+    },
 
-  icon: { height: 22, width: 22, resizeMode: "contain" },
+    icon: {
+        height: 22,
+        width: 22,
+        resizeMode: "contain",
+    },
 
-  v_pieChart: {
-    flexDirection: "row",
-    width: "100%",
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderColor: grey3,
-    backgroundColor: "#fff",
-  },
+    iconSmall: {
+        height: 15,
+        width: 15,
+        resizeMode: "contain",
+    },
 
-  v_chart_container: {
-    width: windowWidth / 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    iconScrollHeader: {
+        height: 12,
+        width: 12,
+        resizeMode: "contain",
+        marginLeft: 8,
+        tintColor: "#C2C2C2",
+    },
 
-  txt_chart_name: {
-    color: grey1,
-    marginBottom: 5,
-  },
+    titleScrollHeader: {
+        fontWeight: "bold",
+        fontSize: 17,
+        textAlignVertical: "center",
+    },
 
-  txt_chart_value: {
-    fontSize: 17,
-  },
+    pieChartContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: grey3,
+        backgroundColor: "#fff",
+    },
+
+    pieChartText: {
+        textAlign: "center",
+        fontSize: 20,
+        marginVertical: 15,
+        fontWeight: "700"
+    },
+
+    modalViewContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 50,
+        backgroundColor: "#fff",
+        borderBottomWidth: 1,
+        borderColor: grey3,
+    },
+
+    modalItem: {
+        width: "100%",
+        justifyContent: "center",
+        marginHorizontal: 15,
+        borderBottomWidth: 1,
+        borderColor: grey3,
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
 });

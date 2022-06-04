@@ -4,7 +4,7 @@ export const getTransactions = (token: any, params: any = null) => {
     // ? Params will be an object
     if (params) {
         if (params.title === "FUTURE") {
-            return {};
+            return null;
         }
 
         let url: string = "/transactions?";

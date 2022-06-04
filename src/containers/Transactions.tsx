@@ -162,10 +162,16 @@ const Transactions = () => {
       "wallet_id": `${focusWallet.id}`,
     };
     const temp: any = await getTransactions(token, params);
-    if (!temp.error_message) {
+
+    if (temp && !temp.error_message) {
       setTransactionList({ ...temp });
       onUpdateInOutBalance(temp);
       onDistributeTransactionList(temp);
+    } else {
+      setTransactionGroupByDate([]);
+      setTransactionDates([]);
+      setInflow(0);
+      setOutflow(-0);
     }
   };
 
