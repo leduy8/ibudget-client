@@ -184,8 +184,9 @@ const Transactions = () => {
 
   useEffect(() => {
     onGetTransactions();
+    onGetWallets();
     setUpdateSignal(false);
-  }, [updateSignal, selected, focusWallet]);
+  }, [updateSignal, selected]);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -397,7 +398,7 @@ const Transactions = () => {
             </View>
           </View>
 
-          <View style={{ paddingTop: 20 }}>
+          <View style={{ paddingTop: 20, paddingBottom: 200 }}>
             <Button
               iconName={require("../assets/icons/ic_add.png")}
               buttonName={"Add wallet"}
@@ -424,7 +425,7 @@ const Transactions = () => {
                 <TouchableOpacity
                   onPress={() => {
                     onCreateWallet();
-                    onSetTotalBalance();
+                    setUpdateSignal(true);
                     setWalletName("");
                     setWalletBalance("");
                   }}

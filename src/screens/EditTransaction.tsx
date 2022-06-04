@@ -36,6 +36,7 @@ const EditTransaction = (props) => {
     const [datetimePickerModalVisible, setDatetimePickerModalVisible] = useState<any>(false);
     const [walletModalVisible, setWalletModalVisible] = useState<any>(false);
     const [transactionStatus, setTransactionStatus] = useState(Number(`${focusCategory.is_positive ? 1 : 2}`));
+    const [oldWallet, setOldWallet] = useState(focusTransaction.wallet);
 
     const onGetCategories = async () => {
         const temp: any = await getCategories(token);
@@ -86,8 +87,30 @@ const EditTransaction = (props) => {
         }
     }
 
-    const onDeleteOldAndCreateNewTransaction = async (transaction) => {
+    const onDeleteOldAndCreateNewTransaction = async (transaction, oldId) => {
+        const returnedOldWalletAfterTransaction: any = await transactInWallet(token, { "price": money * -1 }, oldWallet.id);
 
+        if (returnedOldWalletAfterTransaction.error_message) {
+            return AlertPopUp("Something went wrong", returnedOldWalletAfterTransaction.error_message);
+        }
+
+        const returnedAfterDeleteTransaction: any = await deleteTransaction(token, oldId);
+
+        if (returnedAfterDeleteTransaction.error_message) {
+            return AlertPopUp("Something went wrong", returnedAfterDeleteTransaction.error_message);
+        };
+
+        const returnedNewWalletAfterTransaction: any = await transactInWallet(token, { "price": money }, walletPicked.id);
+
+        if (returnedNewWalletAfterTransaction.error_message) {
+            return AlertPopUp("Something went wrong", returnedNewWalletAfterTransaction.error_message);
+        }
+
+        const returnedCreateTransaction: any = await createTransaction(transaction, token);
+
+        if (returnedCreateTransaction.error_message) {
+            return AlertPopUp("Something went wrong", returnedCreateTransaction.error_message);
+        }
     }
 
     useEffect(() => {
@@ -129,7 +152,7 @@ const EditTransaction = (props) => {
                             if (focusTransaction.wallet.id === walletPicked.id)
                                 await onUpdateTransaction(transaction);
                             else
-                                await onDeleteOldAndCreateNewTransaction(transaction);
+                                await onDeleteOldAndCreateNewTransaction(transaction, focusTransaction.id);
 
                             onUpdateFocusWallet();
                             onUpdateWalletList();

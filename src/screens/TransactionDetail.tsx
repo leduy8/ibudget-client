@@ -11,6 +11,8 @@ import { deleteTransaction } from "../services/transaction";
 import { setUpdateSignal } from "../redux/actions/updateSignalAction";
 import ConfirmDialog from "../components/ConfirmDialog";
 import PlainItemBar from '../components/PlainItemBar';
+import { transactInWallet } from "../services/wallet";
+import AlertPopUp from "../components/AlertPopUp";
 
 
 const TransactionDetails = (props) => {
@@ -18,8 +20,17 @@ const TransactionDetails = (props) => {
     const { token } = useSelector((state: any) => state.tokenState);
     const { focusTransaction } = useSelector((state: any) => state.focusTransactionState);
 
-    const onDeleteTransaction = () => {
+    const onUpdateAfterDeletion = async () => {
+        const temp: any = await transactInWallet(token, { "price": focusTransaction.price * -1 }, focusTransaction.wallet.id);
+
+        if (temp.error_message) {
+            AlertPopUp("", temp.error_message);
+        };
+    }
+
+    const onDeleteTransaction = async () => {
         deleteTransaction(token, focusTransaction.id);
+        await onUpdateAfterDeletion();
         setUpdateSignal(true);
         navigate(Routes.Transactions);
     }
