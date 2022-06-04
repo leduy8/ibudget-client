@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Routes from "../configs/routes";
 import MainTab from "./MainTab";

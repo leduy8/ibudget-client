@@ -3,7 +3,6 @@ import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image } from 'r
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { grey3 } from "../configs/colors";
-import { textContent } from "../configs/textContent";
 import Routes from "../configs/routes";
 import Button from "../components/Button";
 
@@ -49,7 +48,7 @@ const AccountDetails = (props) => {
 
             <Button
                 iconName={require("../assets/icons/ic_key.png")}
-                buttonName={textContent.ACCOUNT_DETAILS.CHANGE_PASSWORD}
+                buttonName={"Change password"}
                 onPress={() => navigate(Routes.ChangePassword)}
             />
         </SafeAreaView>

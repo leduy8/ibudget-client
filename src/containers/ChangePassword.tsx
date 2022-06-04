@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import Routes from "../configs/routes";
 import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
-import { textContent } from "../configs/textContent";
 import { TextInput } from "react-native-gesture-handler";
 import { changePassword } from "../services/password";
 import Button from "../components/Button";
@@ -57,7 +56,7 @@ const ChangePassword = (props) => {
                         onChangeText={setPassword}
                         placeholderTextColor={placeholderTextColor}
                         secureTextEntry={visiblePassword}
-                        placeholder={textContent.CHANGE_PASSWORD.NEW_PASSWORD}
+                        placeholder={"New password"}
                         value={password}
                     />
                     <TouchableOpacity
@@ -84,7 +83,7 @@ const ChangePassword = (props) => {
                         onChangeText={setPassword2}
                         placeholderTextColor={placeholderTextColor}
                         secureTextEntry={visibleConfirmPassword}
-                        placeholder={textContent.CHANGE_PASSWORD.CONFIRM_PASSWORD}
+                        placeholder={"Confirm password"}
                         value={password2}
                     />
                     <TouchableOpacity
@@ -110,7 +109,7 @@ const ChangePassword = (props) => {
                 <Button
                     customStylesContainer={{ backgroundColor: mainColor, justifyContent: "center" }}
                     customStylesText={{ color: "#fff", textTransform: "uppercase", fontWeight: "700" }}
-                    buttonName={textContent.CHANGE_PASSWORD.CONFIRM_PASSWORD}
+                    buttonName={"Change password"}
                     onPress={() => {
                         if (password !== password2)
                             AlertPopUp("Invalid input", "Password and confirm password must be match.");

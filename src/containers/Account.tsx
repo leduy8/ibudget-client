@@ -3,7 +3,6 @@ import { useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, Text, SafeAreaView, ScrollView, ImageBackground } from "react-native";
 import Routes from "../configs/routes";
 import { grey1, grey3, mainColor } from "../configs/colors";
-import { textContent } from "../configs/textContent";
 import { deleteToken } from "../redux/actions/tokenAction";
 import { useSelector } from 'react-redux';
 import Button from "../components/Button";
@@ -16,7 +15,7 @@ const ButtonUpgrade = () => {
         source={require("../assets/icons/banner_background.png")}
       >
         <Text style={{ color: "#fff", fontSize: 15, marginBottom: 20 }}>
-          {textContent.ACCOUNT.UPGRADE}
+          Get the most out of this app. Upgrade now!
         </Text>
 
         <View style={styles.bt_upgrade}>
@@ -52,7 +51,7 @@ const Account = () => {
 
         <Button
           iconName={require("../assets/icons/ic_user.png")}
-          buttonName={textContent.ACCOUNT.MY_ACCOUNT}
+          buttonName={"My Account"}
           onPress={() => navigate(Routes.AccountDetails)}
         />
 
@@ -60,32 +59,32 @@ const Account = () => {
 
         <Button
           iconName={require("../assets/icons/ic_wallet.png")}
-          buttonName={textContent.ACCOUNT.MY_WALLET}
+          buttonName={"My Wallets"}
           onPress={() => navigate(Routes.WalletList)}
         />
         <Button
           iconName={require("../assets/icons/ic_debt.png")}
-          buttonName={textContent.ACCOUNT.DEBTS}
+          buttonName={"Debts"}
         />
         <Button
           iconName={require("../assets/icons/ic_loan.png")}
-          buttonName={textContent.ACCOUNT.LOANS}
+          buttonName={"Loans"}
         />
         <Button
           iconName={require("../assets/icons/ic_ask.png")}
-          buttonName={textContent.ACCOUNT.HELP_SUPPORT}
+          buttonName={"Help & Support"}
         />
         <Button
           iconName={require("../assets/icons/ic_about.png")}
-          buttonName={textContent.ACCOUNT.ABOUT}
+          buttonName={"About"}
         />
         <Button
           iconName={require("../assets/icons/ic_settings.png")}
-          buttonName={textContent.ACCOUNT.SETTING}
+          buttonName={"Settings"}
         />
         <Button
           iconName={require("../assets/icons/ic_log_out.png")}
-          buttonName={textContent.ACCOUNT.LOG_OUT}
+          buttonName={"Log Out"}
           onPress={() => deleteToken()}
         />
       </ScrollView>

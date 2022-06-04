@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import { mainColor, placeholderTextColor } from "../../configs/colors";
 import Routes from "../../configs/routes";
-import { textContent } from "../../configs/textContent";
 import { reigster } from "../../services/auth";
 
 const Register = () => {
@@ -90,13 +89,13 @@ const Register = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.txt_header}>{textContent.SIGNIN_SIGNUP.REGISTER}</Text>
+      <Text style={styles.txt_header}>Register</Text>
 
       <View style={styles.textInput}>
         <TextInput
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
-          placeholder={textContent.SIGNIN_SIGNUP.USERNAME}
+          placeholder={"Username"}
           value={username}
           onChangeText={(text) => setUsername(text)}
         ></TextInput>
@@ -107,7 +106,7 @@ const Register = () => {
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
           secureTextEntry={visiblePassword}
-          placeholder={textContent.SIGNIN_SIGNUP.PASSWORD}
+          placeholder={"Password"}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
@@ -136,23 +135,21 @@ const Register = () => {
         <TextInput
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
-          placeholder={textContent.SIGNIN_SIGNUP.NAME}
+          placeholder={"Name"}
           value={name}
           onChangeText={(text) => setName(text)}
         ></TextInput>
       </View>
 
       <TouchableOpacity style={styles.bt_login} onPress={() => onRegister()}>
-        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>
-          {textContent.SIGNIN_SIGNUP.REGISTER}
-        </Text>
+        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>Register</Text>
       </TouchableOpacity>
 
       <Text
         style={[styles.txt_register, { textAlign: "center" }]}
         onPress={() => navigate(Routes.Login)}
       >
-        {textContent.SIGNIN_SIGNUP.LOGIN}
+        Login
       </Text>
       <Modal
         animationType="slide"

@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import Routes from './../configs/routes';
 import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
 import { windowWidth } from "../configs/constants";
-import { textContent } from "../configs/textContent";
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
@@ -46,7 +45,7 @@ const Header = (props) => {
       </View>
       <View style={styles.v_header_balance}>
         <Text style={{ color: "#C2C2C2", fontSize: 12, textAlignVertical: "center", }}>
-          {walletName || textContent.TRANSACTIONS.CASH}
+          {walletName || "Cash"}
         </Text>
         <Text style={{ fontWeight: "bold", fontSize: 17, textAlignVertical: "center", }}>
           {formatCurrency(balance) || 0} đ

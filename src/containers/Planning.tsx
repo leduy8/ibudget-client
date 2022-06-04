@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { textContent } from "../configs/textContent";
 import Button from "../components/Button";
 
 const Header = () => {
@@ -45,13 +44,13 @@ const Planning = () => {
         <Header />
         <View style={[styles.v_header_name, { marginBottom: 30 }]}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            {textContent.PLANNING.PLANNING}
+            Planning
           </Text>
         </View>
 
         <Button
           iconName={require("../assets/icons/ic_planning.png")}
-          buttonName={textContent.PLANNING.BUDGETS}
+          buttonName={"Budgets"}
         />
       </ScrollView>
     </SafeAreaView>

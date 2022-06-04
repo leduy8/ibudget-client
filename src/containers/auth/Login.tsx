@@ -11,7 +11,6 @@ import {
   Modal,
 } from "react-native";
 import Routes from "../../configs/routes";
-import { textContent } from "../../configs/textContent";
 import { setToken } from "../../redux/actions/tokenAction";
 import { setUser } from "../../redux/actions/userAction";
 import { login } from "../../services/auth";
@@ -101,7 +100,7 @@ const Login = () => {
         <TextInput
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
-          placeholder={textContent.SIGNIN_SIGNUP.USERNAME}
+          placeholder={"Username"}
           value={username}
           onChangeText={(text) => setUsername(text)}
         ></TextInput>
@@ -112,7 +111,7 @@ const Login = () => {
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
           secureTextEntry={visiblePassword}
-          placeholder={textContent.SIGNIN_SIGNUP.PASSWORD}
+          placeholder={"Password"}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
