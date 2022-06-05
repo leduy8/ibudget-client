@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -45,7 +46,7 @@ const WalletList = (props) => {
         </View>
       </View>
 
-      <View>
+      <ScrollView>
         {walletList?.wallets
           ? walletList?.wallets.map((item, index) => (
               <View
@@ -103,7 +104,7 @@ const WalletList = (props) => {
               </View>
             ))
           : null}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderColor: grey3,
-    marginBottom: 30,
+    marginBottom: 20,
   },
 
   icon: {

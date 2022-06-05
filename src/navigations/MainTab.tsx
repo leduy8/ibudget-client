@@ -10,7 +10,7 @@ import { mainColor } from "../configs/colors";
 
 const Tab = createBottomTabNavigator();
 
-const CustomQrScanButton: any = ({ children, onPress }) => (
+const PlusButton: any = ({ children, onPress }) => (
   <TouchableOpacity
     style={{
       justifyContent: "center",
@@ -18,13 +18,15 @@ const CustomQrScanButton: any = ({ children, onPress }) => (
     }}
     onPress={onPress}
   >
-    <View style={{
-      width: 50,
-      height: 50,
-      borderRadius: 30,
-      backgroundColor: mainColor,
-      marginBottom: 30,
-    }}>
+    <View
+      style={{
+        width: 50,
+        height: 50,
+        borderRadius: 30,
+        backgroundColor: mainColor,
+        marginBottom: 30,
+      }}
+    >
       {children}
     </View>
   </TouchableOpacity>
@@ -35,9 +37,7 @@ const MainTab = () => {
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: [
-          styles.tabBarStyle,
-        ],
+        tabBarStyle: [styles.tabBarStyle],
       }}
     >
       <Tab.Screen
@@ -56,7 +56,9 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
+              <Text
+                style={[styles.txt_navText, focused && { color: "#212121" }]}
+              >
                 {Routes.Transactions}
               </Text>
             </View>
@@ -79,7 +81,9 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
+              <Text
+                style={[styles.txt_navText, focused && { color: "#212121" }]}
+              >
                 {Routes.Planning}
               </Text>
             </View>
@@ -105,11 +109,7 @@ const MainTab = () => {
               />
             </View>
           ),
-          tabBarButton: (props) => (
-            <CustomQrScanButton
-              {...props}
-            />
-          ),
+          tabBarButton: (props) => <PlusButton {...props} />,
         }}
       />
       <Tab.Screen
@@ -128,7 +128,9 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
+              <Text
+                style={[styles.txt_navText, focused && { color: "#212121" }]}
+              >
                 {Routes.Learning}
               </Text>
             </View>
@@ -151,7 +153,9 @@ const MainTab = () => {
                   tintColor: focused ? "#212121" : "#BDBDBD",
                 }}
               />
-              <Text style={[styles.txt_navText, focused && { color: "#212121" }]}>
+              <Text
+                style={[styles.txt_navText, focused && { color: "#212121" }]}
+              >
                 {Routes.Account}
               </Text>
             </View>

@@ -14,6 +14,7 @@ const Routes: any = {
     TransactionDetails: "TransactionDetails",
     EditTransaction: "EditTransaction",
     BudgetList: "BudgetList",
+    AddBudget: "AddBudget",
 };
 
 export default Routes;

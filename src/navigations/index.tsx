@@ -7,10 +7,12 @@ import Register from "../screens/Register";
 import Login from "../screens/Login";
 import WalletList from "../screens/WalletList";
 import AccountDetails from "../screens/AccountDetails";
-import ChangePassword from '../screens/ChangePassword';
+import ChangePassword from "../screens/ChangePassword";
 import Report from "../screens/Report";
-import TransactionDetails from '../screens/TransactionDetail';
+import TransactionDetails from "../screens/TransactionDetail";
 import EditTransaction from "../screens/EditTransaction";
+import BudgetList from "../screens/BudgetList";
+import AddBudget from "../screens/AddBudget";
 
 const Stack = createStackNavigator();
 
@@ -66,6 +68,16 @@ const RootStack = memo(() => {
           <Stack.Screen
             name={Routes.EditTransaction}
             component={EditTransaction}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={Routes.BudgetList}
+            component={BudgetList}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={Routes.AddBudget}
+            component={AddBudget}
             options={{ headerShown: false }}
           />
         </>
