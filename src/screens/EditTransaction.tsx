@@ -88,7 +88,8 @@ const EditTransaction = (props) => {
     }
 
     const onDeleteOldAndCreateNewTransaction = async (transaction, oldId) => {
-        const returnedOldWalletAfterTransaction: any = await transactInWallet(token, { "price": money * -1 }, oldWallet.id);
+        const transactMoney = focusTransaction.category.type === "Expense" ? money * -1 : money;
+        const returnedOldWalletAfterTransaction: any = await transactInWallet(token, { "price": transactMoney * -1 }, oldWallet.id);
 
         if (returnedOldWalletAfterTransaction.error_message) {
             return AlertPopUp("Something went wrong", returnedOldWalletAfterTransaction.error_message);
@@ -100,7 +101,7 @@ const EditTransaction = (props) => {
             return AlertPopUp("Something went wrong", returnedAfterDeleteTransaction.error_message);
         };
 
-        const returnedNewWalletAfterTransaction: any = await transactInWallet(token, { "price": money }, walletPicked.id);
+        const returnedNewWalletAfterTransaction: any = await transactInWallet(token, { "price": transactMoney }, walletPicked.id);
 
         if (returnedNewWalletAfterTransaction.error_message) {
             return AlertPopUp("Something went wrong", returnedNewWalletAfterTransaction.error_message);
