@@ -2,7 +2,8 @@ import { Text, StyleSheet, Image, View } from "react-native";
 import { grey3 } from "../configs/colors";
 
 export default function PlainItemBar(props) {
-  const { iconName, name, customStylesContainer, customStylesText, children } = props;
+  const { iconName, name, customStylesContainer, customStylesText, children } =
+    props;
 
   return (
     <View style={[styles.v_account_item, customStylesContainer]}>
@@ -33,12 +34,12 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     marginRight: 10,
-    resizeMode: 'contain'
+    resizeMode: "contain",
   },
 
   margin_right: {
     position: "absolute",
     right: 0,
-    tintColor: grey3
+    tintColor: grey3,
   },
 });

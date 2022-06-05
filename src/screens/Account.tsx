@@ -1,10 +1,17 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { View, StyleSheet, Text, SafeAreaView, ScrollView, ImageBackground } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import Routes from "../configs/routes";
 import { grey1, grey3, mainColor } from "../configs/colors";
 import { deleteToken } from "../redux/actions/tokenAction";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import Button from "../components/Button";
 
 const ButtonUpgrade = () => {
@@ -28,7 +35,7 @@ const ButtonUpgrade = () => {
 
 const Account = () => {
   const { navigate } = useNavigation();
-  const { user } = useSelector((state: any) => state.userState)
+  const { user } = useSelector((state: any) => state.userState);
 
   const getAvatarInitial = (name: any) => {
     if (name != undefined && name != null && name != {}) {
@@ -42,7 +49,7 @@ const Account = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.v_account_detail}>
           <View style={styles.v_avatar}>
-            <Text style={{ fontSize: 40, color: '#FFF', fontWeight: 'bold' }}>
+            <Text style={{ fontSize: 40, color: "#FFF", fontWeight: "bold" }}>
               {getAvatarInitial(user?.name)}
             </Text>
           </View>

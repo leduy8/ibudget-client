@@ -7,7 +7,7 @@ function getFullUrl(url: string | string[]) {
 
 const get = (url: any, options = {}, token: any) => {
   const fullUrl = getFullUrl(url);
-  
+
   return new Promise((resolve, reject) => {
     fetch(fullUrl, {
       ...options,
@@ -40,7 +40,7 @@ const get = (url: any, options = {}, token: any) => {
 
 const post = (url: any, data: any, method = "POST", token: any) => {
   const fullUrl = getFullUrl(url);
-  
+
   return new Promise((resolve, reject) => {
     fetch(fullUrl, {
       method: method,

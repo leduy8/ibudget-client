@@ -6,7 +6,7 @@ const initValue = {
 
 const updateSignal = (state = initValue, action: any) => {
   switch (action.type) {
-    case EnumActionType.SET_UPDATE_SIGNAL: 
+    case EnumActionType.SET_UPDATE_SIGNAL:
     return {
       ...state,
       updateSignal: action.updateSignal

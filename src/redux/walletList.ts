@@ -6,7 +6,7 @@ const initValue = {
 
 const walletList = (state = initValue, action: any) => {
   switch (action.type) {
-    case EnumActionType.SET_WALLET_LIST: 
+    case EnumActionType.SET_WALLET_LIST:
     return {
       ...state,
       walletList: action.walletList

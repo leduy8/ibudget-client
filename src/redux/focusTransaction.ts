@@ -6,7 +6,7 @@ const initValue = {
 
 const focusTransaction = (state = initValue, action: any) => {
   switch (action.type) {
-    case EnumActionType.SET_FOCUS_TRANSACTION: 
+    case EnumActionType.SET_FOCUS_TRANSACTION:
     return {
       ...state,
       focusTransaction: action.focusTransaction

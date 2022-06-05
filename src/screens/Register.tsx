@@ -142,7 +142,9 @@ const Register = () => {
       </View>
 
       <TouchableOpacity style={styles.bt_login} onPress={() => onRegister()}>
-        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>Register</Text>
+        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>
+          Register
+        </Text>
       </TouchableOpacity>
 
       <Text

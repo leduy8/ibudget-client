@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import React from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 
 export default function Loading() {
   return (
@@ -13,19 +13,19 @@ export default function Loading() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#70707077',
-    position: 'absolute',
+    backgroundColor: "#70707077",
+    position: "absolute",
     top: 0,
     left: 0,
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
     zIndex: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   v_spinner: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 5,
   },
 });

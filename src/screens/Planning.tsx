@@ -1,63 +1,28 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Text,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import { View, StyleSheet, Text, SafeAreaView, ScrollView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Routes from "../configs/routes";
 import Button from "../components/Button";
 
-const Header = () => {
-  return (
-    <View style={styles.v_header}>
-      <View style={styles.v_wallet}>
-        <TouchableOpacity
-          style={{ backgroundColor: "#364E5C", padding: 8, borderRadius: 30 }}
-        >
-          <Image
-            style={styles.icon}
-            source={require("../assets/icons/ic_color_wallet.png")}
-          />
-        </TouchableOpacity>
-        <Image
-          style={{
-            height: 12,
-            width: 12,
-            resizeMode: "contain",
-            marginLeft: 8,
-            tintColor: "#C2C2C2",
-          }}
-          source={require("../assets/icons/ic_down_arrow.png")}
-        />
-      </View>
-    </View>
-  );
-};
-
 const Planning = () => {
+  const { navigate } = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Header />
-        <View style={[styles.v_header_name, { marginBottom: 30 }]}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            Planning
-          </Text>
+        <View style={[styles.v_header_name, { marginVertical: 20 }]}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Planning</Text>
         </View>
 
         <Button
           iconName={require("../assets/icons/ic_planning.png")}
           buttonName={"Budgets"}
+          onPress={() => navigate(Routes.BudgetList)}
         />
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-export default Planning;
 
 const styles = StyleSheet.create({
   container: {
@@ -65,27 +30,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F2F2",
   },
 
-  v_header: {
-    backgroundColor: "#F2F2F2",
-    height: 50,
-    width: "100%",
-    paddingHorizontal: 15,
-    justifyContent: "center",
-  },
-
-  v_wallet: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-
-  icon: {
-    height: 17,
-    width: 17,
-    resizeMode: "contain"
-  },
-
   v_header_name: {
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
 });
+
+export default Planning;

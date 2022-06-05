@@ -1,20 +1,32 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, TextInput, Text, Platform, SafeAreaView, ScrollView, FlatList, Modal } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Text,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+  Modal,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import Routes from '../configs/routes';
+import Routes from "../configs/routes";
 import { grey3, mainColor, placeholderTextColor } from "../configs/colors";
-import { windowWidth } from "../configs/app";
+import { statusBarHeight, windowWidth } from "../configs/app";
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { setWalletList } from "../redux/actions/walletListAction";
 import { createWallet, getWallets, getWalletById } from "../services/wallet";
 import { formatCurrency } from "../ultils/string";
-import { getTransactions } from '../services/transaction';
-import { setUpdateSignal } from '../redux/actions/updateSignalAction';
+import { getTransactions } from "../services/transaction";
+import { setUpdateSignal } from "../redux/actions/updateSignalAction";
 import { getDateDetails } from "../ultils/date";
 import { delay } from "../ultils/time";
-import { setFocusTransaction } from '../redux/actions/focusTransactionAction';
-import { categoryIconsMapper } from '../ultils/mapper';
+import { setFocusTransaction } from "../redux/actions/focusTransactionAction";
+import { categoryIconsMapper } from "../ultils/mapper";
 import Button from "../components/Button";
 
 const Header = (props) => {
@@ -44,10 +56,22 @@ const Header = (props) => {
         />
       </View>
       <View style={styles.v_header_balance}>
-        <Text style={{ color: "#C2C2C2", fontSize: 12, textAlignVertical: "center", }}>
+        <Text
+          style={{
+            color: "#C2C2C2",
+            fontSize: 12,
+            textAlignVertical: "center",
+          }}
+        >
           {walletName || "Cash"}
         </Text>
-        <Text style={{ fontWeight: "bold", fontSize: 17, textAlignVertical: "center", }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 17,
+            textAlignVertical: "center",
+          }}
+        >
           {formatCurrency(balance) || 0} đ
         </Text>
       </View>
@@ -112,7 +136,10 @@ const Transactions = () => {
   };
 
   const onCreateWallet = async () => {
-    const walletData = await createWallet({ "name": walletName, "balance": walletBalance }, token);
+    const walletData = await createWallet(
+      { name: walletName, balance: walletBalance },
+      token
+    );
 
     if (walletData) {
       onGetWallets();
@@ -121,13 +148,23 @@ const Transactions = () => {
   };
 
   const onGetTransactions = async () => {
-    const fromDate = dateRange[selected]["year"] + "-" + dateRange[selected]["month"] + "-" + dateRange[selected]["dayStart"];
-    const toDate = dateRange[selected]["year"] + "-" + dateRange[selected]["month"] + "-" + dateRange[selected]["dayEnd"];
+    const fromDate =
+      dateRange[selected]["year"] +
+      "-" +
+      dateRange[selected]["month"] +
+      "-" +
+      dateRange[selected]["dayStart"];
+    const toDate =
+      dateRange[selected]["year"] +
+      "-" +
+      dateRange[selected]["month"] +
+      "-" +
+      dateRange[selected]["dayEnd"];
     const params = {
-      "from_date": `${fromDate}`,
-      "to_date": `${toDate}`,
-      "title": `${dateRange[selected]["title"]}`,
-      "wallet_id": `${focusWallet.id}`,
+      from_date: `${fromDate}`,
+      to_date: `${toDate}`,
+      title: `${dateRange[selected]["title"]}`,
+      wallet_id: `${focusWallet.id}`,
     };
     const temp: any = await getTransactions(token, params);
 
@@ -174,8 +211,7 @@ const Transactions = () => {
         tempTransactionDates.push(getDateDetails(transaction.created_date));
         tempTransactionGroupByDate.push([transaction]);
         index += 1;
-      } else
-        tempTransactionGroupByDate[index].push(transaction);
+      } else tempTransactionGroupByDate[index].push(transaction);
     });
 
     setTransactionGroupByDate([...tempTransactionGroupByDate]);
@@ -194,12 +230,18 @@ const Transactions = () => {
       onPress={() => {
         myList.current.scrollToIndex({
           animated: true,
-          index: dateRange.indexOf(item) === 0 ? 0 : dateRange.indexOf(item) - 1,
+          index:
+            dateRange.indexOf(item) === 0 ? 0 : dateRange.indexOf(item) - 1,
         });
         setSelected(dateRange.indexOf(item));
       }}
     >
-      <Text style={[{ fontSize: 15, color: "#BDBDBD" }, selected === dateRange.indexOf(item) && { color: "#000" }]}>
+      <Text
+        style={[
+          { fontSize: 15, color: "#BDBDBD" },
+          selected === dateRange.indexOf(item) && { color: "#000" },
+        ]}
+      >
         {item.title}
       </Text>
     </TouchableOpacity>
@@ -239,7 +281,9 @@ const Transactions = () => {
         <View style={styles.v_count_balance}>
           <View style={[styles.v_balance, { marginBottom: 10 }]}>
             <Text>Inflow</Text>
-            <Text style={{ position: "absolute", right: 15 }}>+{formatCurrency(inflow)} đ</Text>
+            <Text style={{ position: "absolute", right: 15 }}>
+              +{formatCurrency(inflow)} đ
+            </Text>
           </View>
           <View style={styles.v_balance}>
             <Text>Outflow</Text>
@@ -251,51 +295,75 @@ const Transactions = () => {
             <Text>{formatCurrency(onInOutDifferences()) + " đ"}</Text>
           </View>
 
-          <TouchableOpacity onPress={() => { navigate(Routes.Report) }}>
-            <Text style={{ textAlign: "center", color: mainColor, marginTop: 5 }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigate(Routes.Report);
+            }}
+          >
+            <Text
+              style={{ textAlign: "center", color: mainColor, marginTop: 5 }}
+            >
               View report for this period
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={{ marginVertical: 10 }}>
-          {(transactionGroupByDate.length > 0 && transactionDates.length > 0) ? transactionGroupByDate.map((transactionGroup, index) => {
-            return (
-              <View key={index} style={{ marginVertical: 10 }}>
-                <View style={styles.transactionGroupDate}>
-                  <Text style={styles.transactionGroupDay}>
-                    {transactionDates[index].day}
-                  </Text>
-                  <View>
-                    <Text>{transactionDates[index].weekday}</Text>
-                    <Text>{transactionDates[index].month + " " + transactionDates[index].year}</Text>
-                  </View>
-                </View>
-
-                {transactionGroup.map((transaction, index) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      style={styles.transactionItem}
-                      onPress={() => {
-                        setFocusTransaction(transaction);
-                        navigate(Routes.TransactionDetails);
-                      }}
-                    >
-                      <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                        <Image
-                          style={{ height: 30, width: 30, marginRight: 20 }}
-                          source={categoryIconsMapper[`${transaction.category.icon_name}`]}
-                        />
-                        <Text style={{ fontSize: 15 }}>{transaction.category.name}</Text>
+          {transactionGroupByDate.length > 0 && transactionDates.length > 0
+            ? transactionGroupByDate.map((transactionGroup, index) => {
+                return (
+                  <View key={index} style={{ marginVertical: 10 }}>
+                    <View style={styles.transactionGroupDate}>
+                      <Text style={styles.transactionGroupDay}>
+                        {transactionDates[index].day}
+                      </Text>
+                      <View>
+                        <Text>{transactionDates[index].weekday}</Text>
+                        <Text>
+                          {transactionDates[index].month +
+                            " " +
+                            transactionDates[index].year}
+                        </Text>
                       </View>
-                      <Text>{formatCurrency(transaction.price)} đ</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            );
-          }) : null}
+                    </View>
+
+                    {transactionGroup.map((transaction, index) => {
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          style={styles.transactionItem}
+                          onPress={() => {
+                            setFocusTransaction(transaction);
+                            navigate(Routes.TransactionDetails);
+                          }}
+                        >
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Image
+                              style={{ height: 30, width: 30, marginRight: 20 }}
+                              source={
+                                categoryIconsMapper[
+                                  `${transaction.category.icon_name}`
+                                ]
+                              }
+                            />
+                            <Text style={{ fontSize: 15 }}>
+                              {transaction.category.name}
+                            </Text>
+                          </View>
+                          <Text>{formatCurrency(transaction.price)} đ</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                );
+              })
+            : null}
         </View>
       </ScrollView>
       <Modal
@@ -306,7 +374,13 @@ const Transactions = () => {
           setModalVisible(!modalVisible);
         }}
       >
-        <ScrollView style={{ flex: 1, backgroundColor: "#F5F5F5", marginTop: Platform.OS === "ios" ? 16 : 0 }}>
+        <ScrollView
+          style={{
+            flex: 1,
+            backgroundColor: "#F5F5F5",
+            marginTop: Platform.OS === "ios" ? statusBarHeight : 0,
+          }}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -358,42 +432,44 @@ const Transactions = () => {
             <View>
               {walletList?.wallets
                 ? walletList?.wallets.map((item, index) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      onGetWalletById(item.id);
-                    }}
-                    key={index}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      backgroundColor: "#fff",
-                      marginBottom: 0,
-                      paddingVertical: 15,
-                      paddingHorizontal: 5,
-                      borderBottomWidth: 1,
-                      borderBottomColor: "#eee"
-                    }}
-                  >
-                    <View
+                    <TouchableOpacity
+                      onPress={() => {
+                        onGetWalletById(item.id);
+                      }}
+                      key={index}
                       style={{
-                        backgroundColor: "#fff",
                         flexDirection: "row",
                         alignItems: "center",
-                        paddingHorizontal: 15,
-                        paddingVertical: 10,
+                        backgroundColor: "#fff",
+                        marginBottom: 0,
+                        paddingVertical: 15,
+                        paddingHorizontal: 5,
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#eee",
                       }}
                     >
-                      <Image
-                        style={{ height: 40, width: 40, marginRight: 20 }}
-                        source={require("../assets/icons/ic_color_wallet.png")}
-                      />
-                      <View>
-                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
-                        <Text>{formatCurrency(item.balance)} đ</Text>
+                      <View
+                        style={{
+                          backgroundColor: "#fff",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          paddingHorizontal: 15,
+                          paddingVertical: 10,
+                        }}
+                      >
+                        <Image
+                          style={{ height: 40, width: 40, marginRight: 20 }}
+                          source={require("../assets/icons/ic_color_wallet.png")}
+                        />
+                        <View>
+                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                            {item.name}
+                          </Text>
+                          <Text>{formatCurrency(item.balance)} đ</Text>
+                        </View>
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                ))
+                    </TouchableOpacity>
+                  ))
                 : null}
             </View>
           </View>
@@ -492,7 +568,7 @@ const styles = StyleSheet.create({
   icon: {
     height: 22,
     width: 22,
-    resizeMode: "contain"
+    resizeMode: "contain",
   },
 
   v_monthItem: {
@@ -565,5 +641,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 20,
     paddingVertical: 20,
-  }
+  },
 });

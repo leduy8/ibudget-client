@@ -16,7 +16,7 @@ import { setUser } from "../redux/actions/userAction";
 import { login } from "../services/auth";
 import { getUser } from "../services/auth";
 import { mainColor, placeholderTextColor } from "../configs/colors";
-import { setWalletList } from '../redux/actions/walletListAction';
+import { setWalletList } from "../redux/actions/walletListAction";
 import { getWallets } from "../services/wallet";
 import { setFocusWallet } from "../redux/actions/focusWalletAction";
 import { delay } from "../ultils/time";
@@ -76,7 +76,9 @@ const Login = () => {
         if (!walletList?.error_message) {
           setWalletList(walletList);
           setFocusWallet(walletList.wallets[0] || {});
-          delay(2).then(() => setToken(data.access_token)).catch((err) => console.log(err));
+          delay(2)
+            .then(() => setToken(data.access_token))
+            .catch((err) => console.log(err));
         }
       } else if (data?.error_message) {
         setTurnOnLoading(false);
@@ -136,7 +138,9 @@ const Login = () => {
       </View>
 
       <TouchableOpacity style={styles.bt_login} onPress={() => onLogin()}>
-        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>Login</Text>
+        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>
+          Login
+        </Text>
       </TouchableOpacity>
 
       <Text

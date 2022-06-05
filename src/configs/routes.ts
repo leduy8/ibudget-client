@@ -13,6 +13,7 @@ const Routes: any = {
     Learning: "Learning",
     TransactionDetails: "TransactionDetails",
     EditTransaction: "EditTransaction",
+    BudgetList: "BudgetList",
 };
 
 export default Routes;

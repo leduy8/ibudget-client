@@ -6,7 +6,7 @@ const initValue = {
 
 const focusWallet = (state = initValue, action: any) => {
   switch (action.type) {
-    case EnumActionType.SET_FOCUS_WALLET: 
+    case EnumActionType.SET_FOCUS_WALLET:
     return {
       ...state,
       focusWallet: action.focusWallet
