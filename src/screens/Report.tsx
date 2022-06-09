@@ -15,11 +15,21 @@ import Routes from "../configs/routes";
 import { windowWidth } from "../configs/app";
 import { chartColors, frown, grey1, grey3, happy } from "../configs/colors";
 import { useSelector } from "react-redux";
-import { getReportDates, toDisplayDate } from "../ultils/date";
+import {
+  checkDateInDateRange,
+  getReportDates,
+  toDisplayDate,
+} from "../ultils/date";
 import { getTransactions } from "../services/transaction";
+import { getBudgets } from "../services/budget";
 import { sortArrayObjectByKey } from "../ultils/array";
 import { chartConfig } from "../configs/chart";
-import { expenseMapper, incomeMapper } from "../ultils/mapper";
+import {
+  categoryIconsMapper,
+  expenseMapper,
+  incomeMapper,
+} from "../ultils/mapper";
+import { formatCurrency } from "../ultils/string";
 
 function getTop4AndOthers(array: Array<any>) {
   let resArr = array.slice(0, 4);
@@ -51,6 +61,8 @@ const Report = () => {
   const [expenseByCategory, setExpenseByCategory] = useState([]);
   const [incomeByCategory, setIncomeByCategory] = useState([]);
   const [dateRangeModalVisible, setDateRangeModalVisible] = useState(false);
+  const [transactionList, setTransactionList]: any = useState([]);
+  const [budgetList, setBudgetList]: any = useState([]);
 
   const onGetTotalTransactionByCategory = (data) => {
     let totalExpenseByCategory: any = [
@@ -220,12 +232,46 @@ const Report = () => {
       wallet_id: focusWallet.id,
     };
     const data: any = await getTransactions(token, params);
+    setTransactionList(data);
 
     onGetTotalTransactionByCategory(data);
   };
 
+  const onGetBudets = async () => {
+    const data: any = await getBudgets(token, {
+      from_date: timeRange["dateStart"],
+      to_date: timeRange["dateEnd"],
+      wallet_id: focusWallet.id,
+    });
+    console.log(data);
+    setBudgetList(data);
+  };
+
+  const getSpentBuget = (budget) => {
+    let spent = 0;
+
+    transactionList.transactions.map((transaction) => {
+      if (transaction.category.type === "Expense") {
+        if (
+          checkDateInDateRange(
+            budget.from_date,
+            budget.to_date,
+            transaction.created_date
+          ) &&
+          (budget.category.name === "All categories" ||
+            transaction.category.name === budget.category.name)
+        ) {
+          spent -= transaction.price;
+        }
+      }
+    });
+
+    return spent;
+  };
+
   useEffect(() => {
     onGetTransactions();
+    onGetBudets();
   }, [timeRange]);
 
   return (
@@ -281,6 +327,7 @@ const Report = () => {
             paddingLeft={"15"}
           />
         </View>
+
         <View style={styles.pieChartContainer}>
           <Text style={[styles.pieChartText, { color: happy }]}>Income</Text>
           <PieChart
@@ -292,6 +339,91 @@ const Report = () => {
             backgroundColor={"#fff"}
             paddingLeft={"15"}
           />
+        </View>
+
+        <View>
+          <Text
+            style={{
+              backgroundColor: "#fff",
+              fontSize: 20,
+              fontWeight: "bold",
+              textAlign: "center",
+              paddingTop: 20,
+            }}
+          >
+            Your budget(s) of: {timeRange.title}
+          </Text>
+          {budgetList?.budgets.length > 0 ? (
+            budgetList?.budgets.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#fff",
+                  marginBottom: 0,
+                  paddingVertical: 15,
+                  paddingHorizontal: 5,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#eee",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingHorizontal: 15,
+                  }}
+                >
+                  <View style={{ width: "88%" }}>
+                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
+                      <Image
+                        style={{ height: 25, width: 25, marginRight: 15 }}
+                        source={require("../assets/icons/ic_color_wallet.png")}
+                      />
+
+                      <View style={{ justifyContent: "center" }}>
+                        <Text style={{ fontSize: 17 }}>{item.wallet.name}</Text>
+                      </View>
+                    </View>
+
+                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
+                      <Image
+                        style={{ height: 25, width: 25, marginRight: 15 }}
+                        source={
+                          categoryIconsMapper[`${item.category.icon_name}`]
+                        }
+                      />
+
+                      <View style={{ justifyContent: "center" }}>
+                        <Text style={{ fontSize: 17 }}>
+                          {item.category.name}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View>
+                      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                        + {formatCurrency(item.goal_value)} đ
+                      </Text>
+                      <Text style={{ color: "#777" }}>
+                        Left{" "}
+                        {formatCurrency(item.goal_value - getSpentBuget(item))}{" "}
+                        đ
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            ))
+          ) : (
+            <View style={{ backgroundColor: "#fff", paddingVertical: 20 }}>
+              <Text style={{ color: "#888", textAlign: "center" }}>
+                You don't have any budgets.
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 

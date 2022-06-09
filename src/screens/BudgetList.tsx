@@ -11,23 +11,68 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import Routes from "../configs/routes";
-import { getBudgets } from "../services/budget";
+import { formatCurrency } from "../ultils/string";
+import { getBudgets, deleteBudget } from "../services/budget";
+import { getTransactions } from "../services/transaction";
 import { grey3 } from "../configs/colors";
+import { categoryIconsMapper } from "../ultils/mapper";
+import { setUpdateSignal } from "../redux/actions/updateSignalAction";
+import { checkDateInDateRange } from "../ultils/date";
+import ConfirmDialog from "../components/ConfirmDialog";
 import FloatingAddButton from "../components/FloatingAddButton";
 
 const BudgetList = (props) => {
   const { navigate } = useNavigation();
   const { token } = useSelector((state: any) => state.tokenState);
-  const [budgetList, setBudgetList] = useState([]);
+  const { focusWallet } = useSelector((state: any) => state.focusWalletState);
+  const { updateSignal } = useSelector((state: any) => state.updateSignalState);
+  const [budgetList, setBudgetList]: any = useState([]);
+  const [transactionList, setTransactionList]: any = useState([]);
 
   const onGetBudgets = async () => {
-    const temp: any = await getBudgets(token);
+    const temp: any = await getBudgets(token, { wallet_id: focusWallet.id });
     setBudgetList(temp);
   };
 
+  const onDeleteBudget = async (id) => {
+    const temp = { ...budgetList };
+    temp.budgets = budgetList.budgets.filter((wallet) => wallet.id !== id);
+    setBudgetList(temp);
+    deleteBudget(token, id);
+  };
+
+  const onGetTransactions = async () => {
+    const temp = await getTransactions(token, { wallet_id: focusWallet.id });
+    setTransactionList(temp);
+  };
+
+  const getSpentBuget = (budget) => {
+    let spent = 0;
+
+    transactionList.transactions.map((transaction) => {
+      if (transaction.category.type === "Expense") {
+        if (
+          checkDateInDateRange(
+            budget.from_date,
+            budget.to_date,
+            transaction.created_date
+          ) &&
+          (budget.category.name === "All categories" ||
+            transaction.category.name === budget.category.name)
+        ) {
+          spent -= transaction.price;
+        }
+      }
+    });
+
+    return spent;
+  };
+
   useEffect(() => {
-    // onGetBudgets();
-  }, []);
+    onGetBudgets();
+    onGetTransactions();
+    setUpdateSignal(false);
+  }, [updateSignal]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,7 +91,99 @@ const BudgetList = (props) => {
         </View>
       </View>
 
-      <ScrollView></ScrollView>
+      <ScrollView>
+        {budgetList?.budgets
+          ? budgetList?.budgets.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#fff",
+                  marginBottom: 0,
+                  paddingVertical: 15,
+                  paddingHorizontal: 5,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#eee",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingHorizontal: 15,
+                    paddingVertical: 10,
+                  }}
+                >
+                  <View style={{ width: "88%" }}>
+                    <Text
+                      style={{
+                        fontSize: 25,
+                        fontWeight: "bold",
+                        paddingBottom: 10,
+                      }}
+                    >
+                      {item.title}
+                    </Text>
+                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
+                      <Image
+                        style={{ height: 25, width: 25, marginRight: 15 }}
+                        source={require("../assets/icons/ic_color_wallet.png")}
+                      />
+
+                      <View style={{ justifyContent: "center" }}>
+                        <Text style={{ fontSize: 17 }}>{item.wallet.name}</Text>
+                      </View>
+                    </View>
+
+                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
+                      <Image
+                        style={{ height: 25, width: 25, marginRight: 15 }}
+                        source={
+                          categoryIconsMapper[`${item.category.icon_name}`]
+                        }
+                      />
+
+                      <View style={{ justifyContent: "center" }}>
+                        <Text style={{ fontSize: 17 }}>
+                          {item.category.name}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View>
+                      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                        + {formatCurrency(item.goal_value)} đ
+                      </Text>
+                      <Text style={{ color: "#777" }}>
+                        Left{" "}
+                        {formatCurrency(item.goal_value - getSpentBuget(item))}{" "}
+                        đ
+                      </Text>
+                    </View>
+                  </View>
+
+                  <TouchableOpacity
+                    onPress={() =>
+                      ConfirmDialog(
+                        onDeleteBudget,
+                        "Are you sure?",
+                        "Are you sure that you want to delete this budget?",
+                        item.id
+                      )
+                    }
+                  >
+                    <Image
+                      style={{ height: 40, width: 40 }}
+                      source={require("../assets/icons/ic_trash_bin_red.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))
+          : null}
+      </ScrollView>
       <FloatingAddButton onPress={() => navigate(Routes.AddBudget)} />
     </SafeAreaView>
   );

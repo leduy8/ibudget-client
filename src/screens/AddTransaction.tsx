@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Routes from "../configs/routes";
 import { grey3, placeholderTextColor, happy, frown } from "../configs/colors";
+import { statusBarHeight } from "../configs/app";
 import { getCategories } from "../services/category";
 import { createTransaction } from "../services/transaction";
 import {
@@ -276,7 +277,12 @@ const AddTransaction = () => {
           setCategoryModalVisible(!categoryModalVisible);
         }}
       >
-        <View style={styles.container}>
+        <View
+          style={[
+            styles.container,
+            { marginTop: Platform.OS === "ios" ? statusBarHeight : 0 },
+          ]}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -401,7 +407,7 @@ const AddTransaction = () => {
           style={{
             flex: 1,
             backgroundColor: "#F5F5F5",
-            marginTop: Platform.OS === "ios" ? 16 : 0,
+            marginTop: Platform.OS === "ios" ? statusBarHeight : 0,
           }}
         >
           <View

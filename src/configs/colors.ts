@@ -5,4 +5,5 @@ export const grey3 = '#e3e3e3';
 export const placeholderTextColor = '#707070';
 export const happy = '#42ba96';
 export const frown = '#df4759';
+export const neutral = "#0d6efd";
 export const chartColors = ["#20c997", "#0d6efd", "#dc3545", "#ffc107", "#0dcaf0"];

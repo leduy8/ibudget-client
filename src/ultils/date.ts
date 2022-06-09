@@ -115,3 +115,38 @@ export function getReportDates() {
 
     return timeRange;
 }
+
+export function getPlanningDates() {
+    const date = new Date();
+    const m = date.getMonth() + 1; //January is 0
+    const y = date.getFullYear();
+
+    let timeRange = [
+        {
+            "id": 1,
+            "title": "This month",
+            "fromDate": `${y}-${m}-1`,
+            "toDate": `${y}-${m}-${getLastDayOfMonth(m, `${y}`)}`,
+        },
+        {
+            "id": 2,
+            "title": "This year",
+            "fromDate": `${y}-1-1`,
+            "toDate": `${y}-12-${getLastDayOfMonth(12, `${y}`)}`,
+        },
+    ];
+
+    return timeRange;
+};
+
+export function checkDateInDateRange(fromDate, toDate, checkDate) {
+    const fdate = fromDate.split("-");
+    const tdate = toDate.split("-");
+    const cdate = checkDate.split("-");
+
+    const from = new Date(fdate[0], parseInt(fdate[1])-1, fdate[2]);  // -1 because months are from 0 to 11
+    const to   = new Date(tdate[0], parseInt(tdate[1])-1, tdate[2]);
+    const check = new Date(cdate[0], parseInt(cdate[1])-1, cdate[2]);
+
+    return check > from && check < to;
+}
