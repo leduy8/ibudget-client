@@ -20,14 +20,17 @@ import { setUpdateSignal } from "../redux/actions/updateSignalAction";
 import { checkDateInDateRange } from "../ultils/date";
 import ConfirmDialog from "../components/ConfirmDialog";
 import FloatingAddButton from "../components/FloatingAddButton";
+import Loading from "../components/Loading";
+import { delay } from "../ultils/time";
 
 const BudgetList = (props) => {
   const { navigate } = useNavigation();
   const { token } = useSelector((state: any) => state.tokenState);
   const { focusWallet } = useSelector((state: any) => state.focusWalletState);
   const { updateSignal } = useSelector((state: any) => state.updateSignalState);
-  const [budgetList, setBudgetList]: any = useState([]);
-  const [transactionList, setTransactionList]: any = useState([]);
+  const [budgetList, setBudgetList]: any = useState({});
+  const [transactionList, setTransactionList]: any = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const onGetBudgets = async () => {
     const temp: any = await getBudgets(token, { wallet_id: focusWallet.id });
@@ -71,120 +74,141 @@ const BudgetList = (props) => {
   useEffect(() => {
     onGetBudgets();
     onGetTransactions();
+    delay(100)
+      .then(() => setIsLoading(false))
+      .catch((err) => console.log(err));
     setUpdateSignal(false);
   }, [updateSignal]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.v_header}>
-        <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Budgets</Text>
-        <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
-          <TouchableOpacity
-            style={{ backgroundColor: "#fff", padding: 8, borderRadius: 30 }}
-            onPress={() => navigate(Routes.Planning)}
-          >
-            <Image
-              style={styles.icon}
-              source={require("../assets/icons/ic_arrow_left.png")}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView>
-        {budgetList?.budgets
-          ? budgetList?.budgets.map((item, index) => (
-              <View
-                key={index}
+      {isLoading ? (
+        <Loading></Loading>
+      ) : (
+        <>
+          <View style={styles.v_header}>
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Budgets</Text>
+            <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
+              <TouchableOpacity
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
                   backgroundColor: "#fff",
-                  marginBottom: 0,
-                  paddingVertical: 15,
-                  paddingHorizontal: 5,
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#eee",
+                  padding: 8,
+                  borderRadius: 30,
                 }}
+                onPress={() => navigate(Routes.Planning)}
               >
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingHorizontal: 15,
-                    paddingVertical: 10,
-                  }}
-                >
-                  <View style={{ width: "88%" }}>
-                    <Text
+                <Image
+                  style={styles.icon}
+                  source={require("../assets/icons/ic_arrow_left.png")}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <ScrollView>
+            {budgetList?.budgets
+              ? budgetList?.budgets.map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: "#fff",
+                      marginBottom: 0,
+                      paddingVertical: 15,
+                      paddingHorizontal: 5,
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#eee",
+                    }}
+                  >
+                    <View
                       style={{
-                        fontSize: 25,
-                        fontWeight: "bold",
-                        paddingBottom: 10,
+                        backgroundColor: "#fff",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingHorizontal: 15,
+                        paddingVertical: 10,
                       }}
                     >
-                      {item.title}
-                    </Text>
-                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
-                      <Image
-                        style={{ height: 25, width: 25, marginRight: 15 }}
-                        source={require("../assets/icons/ic_color_wallet.png")}
-                      />
-
-                      <View style={{ justifyContent: "center" }}>
-                        <Text style={{ fontSize: 17 }}>{item.wallet.name}</Text>
-                      </View>
-                    </View>
-
-                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
-                      <Image
-                        style={{ height: 25, width: 25, marginRight: 15 }}
-                        source={
-                          categoryIconsMapper[`${item.category.icon_name}`]
-                        }
-                      />
-
-                      <View style={{ justifyContent: "center" }}>
-                        <Text style={{ fontSize: 17 }}>
-                          {item.category.name}
+                      <View style={{ width: "88%" }}>
+                        <Text
+                          style={{
+                            fontSize: 25,
+                            fontWeight: "bold",
+                            paddingBottom: 10,
+                          }}
+                        >
+                          {item.title}
                         </Text>
-                      </View>
-                    </View>
+                        <View
+                          style={{ flexDirection: "row", marginVertical: 5 }}
+                        >
+                          <Image
+                            style={{ height: 25, width: 25, marginRight: 15 }}
+                            source={require("../assets/icons/ic_color_wallet.png")}
+                          />
 
-                    <View>
-                      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                        + {formatCurrency(item.goal_value)} đ
-                      </Text>
-                      <Text style={{ color: "#777" }}>
-                        Left{" "}
-                        {formatCurrency(item.goal_value - getSpentBuget(item))}{" "}
-                        đ
-                      </Text>
+                          <View style={{ justifyContent: "center" }}>
+                            <Text style={{ fontSize: 17 }}>
+                              {item.wallet.name}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View
+                          style={{ flexDirection: "row", marginVertical: 5 }}
+                        >
+                          <Image
+                            style={{ height: 25, width: 25, marginRight: 15 }}
+                            source={
+                              categoryIconsMapper[`${item.category.icon_name}`]
+                            }
+                          />
+
+                          <View style={{ justifyContent: "center" }}>
+                            <Text style={{ fontSize: 17 }}>
+                              {item.category.name}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View>
+                          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                            + {formatCurrency(item.goal_value)} đ
+                          </Text>
+                          <Text style={{ color: "#777" }}>
+                            Left{" "}
+                            {formatCurrency(
+                              item.goal_value - getSpentBuget(item)
+                            )}{" "}
+                            đ
+                          </Text>
+                        </View>
+                      </View>
+
+                      <TouchableOpacity
+                        onPress={() =>
+                          ConfirmDialog(
+                            onDeleteBudget,
+                            "Are you sure?",
+                            "Are you sure that you want to delete this budget?",
+                            item.id
+                          )
+                        }
+                      >
+                        <Image
+                          style={{ height: 40, width: 40 }}
+                          source={require("../assets/icons/ic_trash_bin_red.png")}
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
-
-                  <TouchableOpacity
-                    onPress={() =>
-                      ConfirmDialog(
-                        onDeleteBudget,
-                        "Are you sure?",
-                        "Are you sure that you want to delete this budget?",
-                        item.id
-                      )
-                    }
-                  >
-                    <Image
-                      style={{ height: 40, width: 40 }}
-                      source={require("../assets/icons/ic_trash_bin_red.png")}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))
-          : null}
-      </ScrollView>
-      <FloatingAddButton onPress={() => navigate(Routes.AddBudget)} />
+                ))
+              : null}
+          </ScrollView>
+          <FloatingAddButton onPress={() => navigate(Routes.AddBudget)} />
+        </>
+      )}
     </SafeAreaView>
   );
 };

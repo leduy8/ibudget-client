@@ -30,6 +30,8 @@ import {
   incomeMapper,
 } from "../ultils/mapper";
 import { formatCurrency } from "../ultils/string";
+import Loading from "../components/Loading";
+import { delay } from "../ultils/time";
 
 function getTop4AndOthers(array: Array<any>) {
   let resArr = array.slice(0, 4);
@@ -63,6 +65,7 @@ const Report = () => {
   const [dateRangeModalVisible, setDateRangeModalVisible] = useState(false);
   const [transactionList, setTransactionList]: any = useState([]);
   const [budgetList, setBudgetList]: any = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const onGetTotalTransactionByCategory = (data) => {
     let totalExpenseByCategory: any = [
@@ -272,205 +275,228 @@ const Report = () => {
   useEffect(() => {
     onGetTransactions();
     onGetBudets();
+    delay(100)
+      .then(() => setIsLoading(false))
+      .catch((err) => console.log(err));
   }, [timeRange]);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header here */}
-      <View style={styles.v_header}>
-        <View style={styles.v_back}>
-          <TouchableOpacity onPress={() => navigate(Routes.Transactions)}>
-            <Image
-              style={styles.iconSmall}
-              source={require("../assets/icons/ic_arrow_left.png")}
-            />
-          </TouchableOpacity>
-        </View>
+      {isLoading ? (
+        <Loading></Loading>
+      ) : (
+        <>
+          {/* Header here */}
+          <View style={styles.v_header}>
+            <View style={styles.v_back}>
+              <TouchableOpacity onPress={() => navigate(Routes.Transactions)}>
+                <Image
+                  style={styles.iconSmall}
+                  source={require("../assets/icons/ic_arrow_left.png")}
+                />
+              </TouchableOpacity>
+            </View>
 
-        <TouchableOpacity
-          onPress={() => setDateRangeModalVisible(true)}
-          style={styles.v_time_range}
-        >
-          <View style={{ alignItems: "center" }}>
-            <Text style={styles.titleScrollHeader}>{timeRange.title}</Text>
-            <Text
-              style={{
-                color: "#C2C2C2",
-                fontSize: 12,
-                textAlignVertical: "center",
-              }}
+            <TouchableOpacity
+              onPress={() => setDateRangeModalVisible(true)}
+              style={styles.v_time_range}
             >
-              {toDisplayDate(timeRange.dateStart)} -{" "}
-              {toDisplayDate(timeRange.dateEnd)}
-            </Text>
-          </View>
-          <Image
-            style={styles.iconScrollHeader}
-            source={require("../assets/icons/ic_down_arrow.png")}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.v_padded}></View>
-      </View>
-
-      {/* Chart view */}
-      <ScrollView>
-        <View style={styles.pieChartContainer}>
-          <Text style={[styles.pieChartText, { color: frown }]}>Expense</Text>
-          <PieChart
-            data={expenseByCategory}
-            width={windowWidth}
-            height={220}
-            chartConfig={chartConfig}
-            accessor={"price"}
-            backgroundColor={"#fff"}
-            paddingLeft={"15"}
-          />
-        </View>
-
-        <View style={styles.pieChartContainer}>
-          <Text style={[styles.pieChartText, { color: happy }]}>Income</Text>
-          <PieChart
-            data={incomeByCategory}
-            width={windowWidth}
-            height={220}
-            chartConfig={chartConfig}
-            accessor={"price"}
-            backgroundColor={"#fff"}
-            paddingLeft={"15"}
-          />
-        </View>
-
-        <View>
-          <Text
-            style={{
-              backgroundColor: "#fff",
-              fontSize: 20,
-              fontWeight: "bold",
-              textAlign: "center",
-              paddingTop: 20,
-            }}
-          >
-            Your budget(s) of: {timeRange.title}
-          </Text>
-          {budgetList?.budgets.length > 0 ? (
-            budgetList?.budgets.map((item, index) => (
-              <View
-                key={index}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "#fff",
-                  marginBottom: 0,
-                  paddingVertical: 15,
-                  paddingHorizontal: 5,
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#eee",
-                }}
-              >
-                <View
+              <View style={{ alignItems: "center" }}>
+                <Text style={styles.titleScrollHeader}>{timeRange.title}</Text>
+                <Text
                   style={{
-                    backgroundColor: "#fff",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingHorizontal: 15,
+                    color: "#C2C2C2",
+                    fontSize: 12,
+                    textAlignVertical: "center",
                   }}
                 >
-                  <View style={{ width: "88%" }}>
-                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
-                      <Image
-                        style={{ height: 25, width: 25, marginRight: 15 }}
-                        source={require("../assets/icons/ic_color_wallet.png")}
-                      />
-
-                      <View style={{ justifyContent: "center" }}>
-                        <Text style={{ fontSize: 17 }}>{item.wallet.name}</Text>
-                      </View>
-                    </View>
-
-                    <View style={{ flexDirection: "row", marginVertical: 5 }}>
-                      <Image
-                        style={{ height: 25, width: 25, marginRight: 15 }}
-                        source={
-                          categoryIconsMapper[`${item.category.icon_name}`]
-                        }
-                      />
-
-                      <View style={{ justifyContent: "center" }}>
-                        <Text style={{ fontSize: 17 }}>
-                          {item.category.name}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View>
-                      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                        + {formatCurrency(item.goal_value)} đ
-                      </Text>
-                      <Text style={{ color: "#777" }}>
-                        Left{" "}
-                        {formatCurrency(item.goal_value - getSpentBuget(item))}{" "}
-                        đ
-                      </Text>
-                    </View>
-                  </View>
-                </View>
+                  {toDisplayDate(timeRange.dateStart)} -{" "}
+                  {toDisplayDate(timeRange.dateEnd)}
+                </Text>
               </View>
-            ))
-          ) : (
-            <View style={{ backgroundColor: "#fff", paddingVertical: 20 }}>
-              <Text style={{ color: "#888", textAlign: "center" }}>
-                You don't have any budgets.
-              </Text>
-            </View>
-          )}
-        </View>
-      </ScrollView>
+              <Image
+                style={styles.iconScrollHeader}
+                source={require("../assets/icons/ic_down_arrow.png")}
+              />
+            </TouchableOpacity>
 
-      {/* Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={dateRangeModalVisible}
-        onRequestClose={() => {
-          setDateRangeModalVisible(!dateRangeModalVisible);
-        }}
-      >
-        <SafeAreaView style={styles.container}>
-          <View style={styles.modalViewContainer}>
-            <Text
-              style={{ position: "absolute", left: 0, paddingLeft: 15 }}
-              onPress={() => setDateRangeModalVisible(false)}
-            >
-              Close
-            </Text>
-            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-              Select Time Range
-            </Text>
+            <View style={styles.v_padded}></View>
           </View>
 
-          <ScrollView style={{ backgroundColor: "#fff", width: "100%" }}>
-            {timeData.map((item) => (
-              <TouchableOpacity
-                onPress={() => {
-                  setTimeRange(item);
-                  setDateRangeModalVisible(false);
+          {/* Chart view */}
+          <ScrollView>
+            <View style={styles.pieChartContainer}>
+              <Text style={[styles.pieChartText, { color: frown }]}>
+                Expense
+              </Text>
+              <PieChart
+                data={expenseByCategory}
+                width={windowWidth}
+                height={220}
+                chartConfig={chartConfig}
+                accessor={"price"}
+                backgroundColor={"#fff"}
+                paddingLeft={"15"}
+              />
+            </View>
+
+            <View style={styles.pieChartContainer}>
+              <Text style={[styles.pieChartText, { color: happy }]}>
+                Income
+              </Text>
+              <PieChart
+                data={incomeByCategory}
+                width={windowWidth}
+                height={220}
+                chartConfig={chartConfig}
+                accessor={"price"}
+                backgroundColor={"#fff"}
+                paddingLeft={"15"}
+              />
+            </View>
+
+            <View>
+              <Text
+                style={{
+                  backgroundColor: "#fff",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  paddingTop: 20,
                 }}
-                key={item.id}
-                style={styles.modalItem}
               >
-                <Text style={{ color: "#000", fontSize: 17, marginBottom: 5 }}>
-                  {item.title}
-                </Text>
-                <Text style={{ color: grey1 }}>
-                  {toDisplayDate(item.dateStart)} -{" "}
-                  {toDisplayDate(item.dateEnd)}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                Your budget(s) of: {timeRange.title}
+              </Text>
+              {budgetList?.budgets.length > 0 ? (
+                budgetList?.budgets.map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      backgroundColor: "#fff",
+                      marginBottom: 0,
+                      paddingVertical: 15,
+                      paddingHorizontal: 5,
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#eee",
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "#fff",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingHorizontal: 15,
+                      }}
+                    >
+                      <View style={{ width: "88%" }}>
+                        <View
+                          style={{ flexDirection: "row", marginVertical: 5 }}
+                        >
+                          <Image
+                            style={{ height: 25, width: 25, marginRight: 15 }}
+                            source={require("../assets/icons/ic_color_wallet.png")}
+                          />
+
+                          <View style={{ justifyContent: "center" }}>
+                            <Text style={{ fontSize: 17 }}>
+                              {item.wallet.name}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View
+                          style={{ flexDirection: "row", marginVertical: 5 }}
+                        >
+                          <Image
+                            style={{ height: 25, width: 25, marginRight: 15 }}
+                            source={
+                              categoryIconsMapper[`${item.category.icon_name}`]
+                            }
+                          />
+
+                          <View style={{ justifyContent: "center" }}>
+                            <Text style={{ fontSize: 17 }}>
+                              {item.category.name}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View>
+                          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                            + {formatCurrency(item.goal_value)} đ
+                          </Text>
+                          <Text style={{ color: "#777" }}>
+                            Left{" "}
+                            {formatCurrency(
+                              item.goal_value - getSpentBuget(item)
+                            )}{" "}
+                            đ
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                ))
+              ) : (
+                <View style={{ backgroundColor: "#fff", paddingVertical: 20 }}>
+                  <Text style={{ color: "#888", textAlign: "center" }}>
+                    You don't have any budgets.
+                  </Text>
+                </View>
+              )}
+            </View>
           </ScrollView>
-        </SafeAreaView>
-      </Modal>
+
+          {/* Modal */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={dateRangeModalVisible}
+            onRequestClose={() => {
+              setDateRangeModalVisible(!dateRangeModalVisible);
+            }}
+          >
+            <SafeAreaView style={styles.container}>
+              <View style={styles.modalViewContainer}>
+                <Text
+                  style={{ position: "absolute", left: 0, paddingLeft: 15 }}
+                  onPress={() => setDateRangeModalVisible(false)}
+                >
+                  Close
+                </Text>
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  Select Time Range
+                </Text>
+              </View>
+
+              <ScrollView style={{ backgroundColor: "#fff", width: "100%" }}>
+                {timeData.map((item) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setTimeRange(item);
+                      setDateRangeModalVisible(false);
+                    }}
+                    key={item.id}
+                    style={styles.modalItem}
+                  >
+                    <Text
+                      style={{ color: "#000", fontSize: 17, marginBottom: 5 }}
+                    >
+                      {item.title}
+                    </Text>
+                    <Text style={{ color: grey1 }}>
+                      {toDisplayDate(item.dateStart)} -{" "}
+                      {toDisplayDate(item.dateEnd)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </SafeAreaView>
+          </Modal>
+        </>
+      )}
     </SafeAreaView>
   );
 };
