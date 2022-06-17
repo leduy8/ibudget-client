@@ -309,7 +309,9 @@ const Transactions = () => {
         </View>
 
         <View style={{ marginVertical: 10 }}>
-          {transactionGroupByDate.length > 0 && transactionDates.length > 0
+          {transactionGroupByDate.length > 0 &&
+          transactionDates.length > 0 &&
+          transactionDates.length == transactionGroupByDate.length
             ? transactionGroupByDate.map((transactionGroup, index) => {
                 return (
                   <View key={index} style={{ marginVertical: 10 }}>
