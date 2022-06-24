@@ -132,6 +132,7 @@ const Transactions = () => {
   const onGetWalletById = async (id) => {
     const temp: any = await getWalletById(token, id);
     setFocusWallet(temp);
+    onGetTransactions(id);
     setModalVisible(!modalVisible);
   };
 
@@ -147,7 +148,7 @@ const Transactions = () => {
     }
   };
 
-  const onGetTransactions = async () => {
+  const onGetTransactions = async (wallet_id = null) => {
     const fromDate =
       dateRange[selected]["year"] +
       "-" +
@@ -164,7 +165,7 @@ const Transactions = () => {
       from_date: `${fromDate}`,
       to_date: `${toDate}`,
       title: `${dateRange[selected]["title"]}`,
-      wallet_id: `${focusWallet.id}`,
+      wallet_id: `${wallet_id || focusWallet.id}`,
     };
     const temp: any = await getTransactions(token, params);
 

@@ -62,21 +62,21 @@ const Account = () => {
           onPress={() => navigate(Routes.AccountDetails)}
         />
 
-        <ButtonUpgrade />
+        {/* <ButtonUpgrade /> */}
 
         <Button
           iconName={require("../assets/icons/ic_wallet.png")}
           buttonName={"My Wallets"}
           onPress={() => navigate(Routes.WalletList)}
         />
-        <Button
+        {/* <Button
           iconName={require("../assets/icons/ic_debt.png")}
           buttonName={"Debts"}
         />
         <Button
           iconName={require("../assets/icons/ic_loan.png")}
           buttonName={"Loans"}
-        />
+        /> */}
         <Button
           iconName={require("../assets/icons/ic_ask.png")}
           buttonName={"Help & Support"}

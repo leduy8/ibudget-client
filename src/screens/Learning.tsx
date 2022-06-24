@@ -67,6 +67,7 @@ const Learning = (props) => {
 
         {blogs.map((blog) => (
           <TouchableOpacity
+            key={blog.title}
             style={{
               marginBottom: 10,
               backgroundColor: "#fff",
