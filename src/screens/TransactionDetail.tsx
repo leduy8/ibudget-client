@@ -83,8 +83,8 @@ const TransactionDetails = (props) => {
               onPress={() => {
                 ConfirmDialog(
                   onDeleteTransaction,
-                  "Are you sure?",
-                  "Are you sure that you want to delete this transaction?"
+                  "Bạn chắc không?",
+                  "Bạn chắc là muốn xóa giao dịch này không?"
                 );
               }}
             >

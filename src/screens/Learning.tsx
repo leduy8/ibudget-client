@@ -62,7 +62,7 @@ const Learning = (props) => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={[styles.v_header_name, { marginVertical: 20 }]}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Learning</Text>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Học hỏi</Text>
         </View>
 
         {blogs.map((blog) => (

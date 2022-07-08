@@ -28,7 +28,7 @@ const AccountDetails = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.v_header}>
-        <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Account</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 18 }}>Tài khoản</Text>
         <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
           <TouchableOpacity
             style={{ backgroundColor: "#fff", padding: 8, borderRadius: 30 }}
@@ -53,7 +53,7 @@ const AccountDetails = (props) => {
 
       <Button
         iconName={require("../assets/icons/ic_key.png")}
-        buttonName={"Change password"}
+        buttonName={"Đổi mật khẩu"}
         onPress={() => navigate(Routes.ChangePassword)}
       />
     </SafeAreaView>

@@ -281,13 +281,13 @@ const Transactions = () => {
       <ScrollView>
         <View style={styles.v_count_balance}>
           <View style={[styles.v_balance, { marginBottom: 10 }]}>
-            <Text>Inflow</Text>
+            <Text>Tổng thu</Text>
             <Text style={{ position: "absolute", right: 15 }}>
               +{formatCurrency(inflow)} đ
             </Text>
           </View>
           <View style={styles.v_balance}>
-            <Text>Outflow</Text>
+            <Text>Tổng chi</Text>
             <Text style={{ position: "absolute", right: 15 }}>
               {formatCurrency(outflow)} đ
             </Text>
@@ -304,7 +304,7 @@ const Transactions = () => {
             <Text
               style={{ textAlign: "center", color: mainColor, marginTop: 5 }}
             >
-              View report for this period
+              Xem thống kê của tháng này
             </Text>
           </TouchableOpacity>
         </View>

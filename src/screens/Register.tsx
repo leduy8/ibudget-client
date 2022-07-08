@@ -89,13 +89,13 @@ const Register = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.txt_header}>Register</Text>
+      <Text style={styles.txt_header}>Đăng ký</Text>
 
       <View style={styles.textInput}>
         <TextInput
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
-          placeholder={"Username"}
+          placeholder={"Tên đăng nhập"}
           value={username}
           onChangeText={(text) => setUsername(text)}
         ></TextInput>
@@ -106,7 +106,7 @@ const Register = () => {
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
           secureTextEntry={visiblePassword}
-          placeholder={"Password"}
+          placeholder={"Mật khẩu"}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
@@ -135,7 +135,7 @@ const Register = () => {
         <TextInput
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
-          placeholder={"Name"}
+          placeholder={"Tên của bạn"}
           value={name}
           onChangeText={(text) => setName(text)}
         ></TextInput>
@@ -143,7 +143,7 @@ const Register = () => {
 
       <TouchableOpacity style={styles.bt_login} onPress={() => onRegister()}>
         <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>
-          Register
+          Đăng ký
         </Text>
       </TouchableOpacity>
 
@@ -151,7 +151,7 @@ const Register = () => {
         style={[styles.txt_register, { textAlign: "center" }]}
         onPress={() => navigate(Routes.Login)}
       >
-        Login
+        Đăng nhập
       </Text>
       <Modal
         animationType="slide"

@@ -22,11 +22,11 @@ const ButtonUpgrade = () => {
         source={require("../assets/icons/banner_background.png")}
       >
         <Text style={{ color: "#fff", fontSize: 15, marginBottom: 20 }}>
-          Get the most out of this app. Upgrade now!
+          Nâng cấp để nhận trải nghiệm hoàn toàn mới!
         </Text>
 
         <View style={styles.bt_upgrade}>
-          <Text style={{ color: mainColor }}>VIEW UPGRADE OPTIONS</Text>
+          <Text style={{ color: mainColor }}>Xem các mục nâng cấp</Text>
         </View>
       </ImageBackground>
     </View>
@@ -58,7 +58,7 @@ const Account = () => {
 
         <Button
           iconName={require("../assets/icons/ic_user.png")}
-          buttonName={"My Account"}
+          buttonName={"Tài khoản"}
           onPress={() => navigate(Routes.AccountDetails)}
         />
 
@@ -66,32 +66,32 @@ const Account = () => {
 
         <Button
           iconName={require("../assets/icons/ic_wallet.png")}
-          buttonName={"My Wallets"}
+          buttonName={"Ví của tôi"}
           onPress={() => navigate(Routes.WalletList)}
         />
         {/* <Button
           iconName={require("../assets/icons/ic_debt.png")}
-          buttonName={"Debts"}
+          buttonName={"Khoản nợ"}
         />
         <Button
           iconName={require("../assets/icons/ic_loan.png")}
-          buttonName={"Loans"}
-        /> */}
+          buttonName={"Khoản cho vay"}
+        />*/}
         <Button
           iconName={require("../assets/icons/ic_ask.png")}
-          buttonName={"Help & Support"}
+          buttonName={"Giúp đỡ"}
         />
         <Button
           iconName={require("../assets/icons/ic_about.png")}
-          buttonName={"About"}
+          buttonName={"Về chúng tôi"}
         />
         <Button
           iconName={require("../assets/icons/ic_settings.png")}
-          buttonName={"Settings"}
+          buttonName={"Cài đặt"}
         />
         <Button
           iconName={require("../assets/icons/ic_log_out.png")}
-          buttonName={"Log Out"}
+          buttonName={"Đăng xuất"}
           onPress={() => deleteToken()}
         />
       </ScrollView>

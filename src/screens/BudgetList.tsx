@@ -60,7 +60,7 @@ const BudgetList = (props) => {
             budget.to_date,
             transaction.created_date
           ) &&
-          (budget.category.name === "All categories" ||
+          (budget.category.name === "Tất cả" ||
             transaction.category.name === budget.category.name)
         ) {
           spent -= transaction.price;
@@ -87,7 +87,9 @@ const BudgetList = (props) => {
       ) : (
         <>
           <View style={styles.v_header}>
-            <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Budgets</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+              Kế hoạch của tôi
+            </Text>
             <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
               <TouchableOpacity
                 style={{
@@ -177,7 +179,7 @@ const BudgetList = (props) => {
                             + {formatCurrency(item.goal_value)} đ
                           </Text>
                           <Text style={{ color: "#777" }}>
-                            Left{" "}
+                            Còn lại{" "}
                             {formatCurrency(
                               item.goal_value - getSpentBuget(item)
                             )}{" "}
@@ -190,8 +192,8 @@ const BudgetList = (props) => {
                         onPress={() =>
                           ConfirmDialog(
                             onDeleteBudget,
-                            "Are you sure?",
-                            "Are you sure that you want to delete this budget?",
+                            "Bạn chắc không?",
+                            "Bạn có chắc muốn xóa kế hoạch này không?",
                             item.id
                           )
                         }

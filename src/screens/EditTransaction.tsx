@@ -122,7 +122,7 @@ const EditTransaction = (props) => {
 
     if (returnedWalletAfterTransaction.error_message) {
       return AlertPopUp(
-        "Something went wrong",
+        "Có lỗi xảy ra",
         returnedWalletAfterTransaction.error_message
       );
     }
@@ -134,10 +134,7 @@ const EditTransaction = (props) => {
     );
 
     if (returnedTransaction.error_message) {
-      return AlertPopUp(
-        "Something went wrong",
-        returnedTransaction.error_message
-      );
+      return AlertPopUp("Có lỗi xảy ra", returnedTransaction.error_message);
     }
   };
 
@@ -152,7 +149,7 @@ const EditTransaction = (props) => {
 
     if (returnedOldWalletAfterTransaction.error_message) {
       return AlertPopUp(
-        "Something went wrong",
+        "Có lỗi xảy ra",
         returnedOldWalletAfterTransaction.error_message
       );
     }
@@ -164,7 +161,7 @@ const EditTransaction = (props) => {
 
     if (returnedAfterDeleteTransaction.error_message) {
       return AlertPopUp(
-        "Something went wrong",
+        "Có lỗi xảy ra",
         returnedAfterDeleteTransaction.error_message
       );
     }
@@ -177,7 +174,7 @@ const EditTransaction = (props) => {
 
     if (returnedNewWalletAfterTransaction.error_message) {
       return AlertPopUp(
-        "Something went wrong",
+        "Có lỗi xảy ra",
         returnedNewWalletAfterTransaction.error_message
       );
     }
@@ -189,7 +186,7 @@ const EditTransaction = (props) => {
 
     if (returnedCreateTransaction.error_message) {
       return AlertPopUp(
-        "Something went wrong",
+        "Có lỗi xảy ra",
         returnedCreateTransaction.error_message
       );
     }
@@ -204,7 +201,7 @@ const EditTransaction = (props) => {
       <View style={{ backgroundColor: "#fff" }}>
         <View style={styles.v_header}>
           <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            Edit Transaction
+            Sửa giao dịch
           </Text>
           <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
             <TouchableOpacity
@@ -248,14 +245,14 @@ const EditTransaction = (props) => {
                 .catch((err) => console.log(err));
             }}
           >
-            <Text>Save</Text>
+            <Text>Lưu</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.v_add_content}>
           <View>
             <Text style={{ paddingLeft: "10%", marginTop: 10, marginLeft: 20 }}>
-              Amount
+              Số tiền
             </Text>
             <View style={styles.v_money}>
               <View style={styles.bt_money}>
@@ -340,7 +337,7 @@ const EditTransaction = (props) => {
               }}
             >
               <Text style={{ fontSize: 15 }}>
-                Is this a positive transaction?
+                Đây có phải là giao dịch tích cực không?
               </Text>
             </View>
             <View style={styles.statusIconContainer}>
@@ -387,9 +384,9 @@ const EditTransaction = (props) => {
               style={{ position: "absolute", left: 12, top: 10 }}
               onPress={() => setCategoryModalVisible(false)}
             >
-              Close
+              Đóng
             </Text>
-            <Text>Select Category</Text>
+            <Text>Lựa chọn loại chi tiêu</Text>
           </View>
           <ScrollView>
             <View>
@@ -402,7 +399,7 @@ const EditTransaction = (props) => {
                   color: frown,
                 }}
               >
-                Expenses
+                Chi tiêu
               </Text>
               {categories?.categories.map((item, index) => {
                 if (item.type === "Expense") {
@@ -442,7 +439,7 @@ const EditTransaction = (props) => {
                   color: happy,
                 }}
               >
-                Incomes
+                Thu nhập
               </Text>
               {categories?.categories.map((item, index) => {
                 if (item.type === "Income") {
@@ -514,9 +511,9 @@ const EditTransaction = (props) => {
               style={{ position: "absolute", left: 12, top: 10 }}
               onPress={() => setWalletModalVisible(false)}
             >
-              Close
+              Đóng
             </Text>
-            <Text>Select Wallet</Text>
+            <Text>Lựa chọn ví</Text>
           </View>
 
           <View>

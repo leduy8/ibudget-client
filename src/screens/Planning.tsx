@@ -11,12 +11,14 @@ const Planning = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={[styles.v_header_name, { marginVertical: 20 }]}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Planning</Text>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            Lên kế hoạch chi tiêu
+          </Text>
         </View>
 
         <Button
           iconName={require("../assets/icons/ic_planning.png")}
-          buttonName={"Budgets"}
+          buttonName={"Các kế hoạch"}
           onPress={() => navigate(Routes.BudgetList)}
         />
       </ScrollView>

@@ -38,7 +38,7 @@ const AddBudget = (props) => {
   const [categories, setCategories] = useState<any>();
   const [focusCategory, setFocusCategory] = useState<any>({});
   const [focusCategoryIcon, setFocusCategoryIcon] = useState<any>();
-  const [dateRangePicked, setDateRangePicked] = useState("This month");
+  const [dateRangePicked, setDateRangePicked] = useState("Tháng này");
   const [fromDate, setFromDate] = useState(`${getPlanningDates()[0].fromDate}`);
   const [toDate, setToDate] = useState(`${getPlanningDates()[0].toDate}`);
   const [walletPicked, setWalletPicked] = useState<any>(focusWallet);
@@ -75,7 +75,9 @@ const AddBudget = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.v_header}>
-        <Text style={{ fontWeight: "bold", fontSize: 18 }}>Add Budget</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+          Thêm kế hoạch mới
+        </Text>
         <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
           <TouchableOpacity
             style={{ backgroundColor: "#fff", padding: 8, borderRadius: 30 }}
@@ -101,30 +103,27 @@ const AddBudget = (props) => {
 
             const returnedBudget: any = await createBudget(budget, token);
             if (returnedBudget.error_message) {
-              return AlertPopUp(
-                "Something went wrong",
-                returnedBudget.error_message
-              );
+              return AlertPopUp("Có lỗi xảy ra", returnedBudget.error_message);
             }
             onUpdateFocusWallet();
             onUpdateWalletList();
             setUpdateSignal(true);
             navigate(Routes.BudgetList);
             setGoalValue(0);
-            setDateRangePicked("This month");
+            setDateRangePicked("Tháng này");
             setFromDate(timeData[0].fromDate);
             setFromDate(timeData[0].toDate);
             setWalletPicked(focusWallet);
           }}
         >
-          <Text>Save</Text>
+          <Text>Lưu</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.v_add_content}>
         <View>
           <Text style={{ paddingLeft: "10%", marginTop: 10, marginLeft: 20 }}>
-            Goal Value
+            Số tiền mong muốn
           </Text>
           <View style={styles.v_money}>
             <View style={styles.bt_money}></View>
@@ -201,9 +200,9 @@ const AddBudget = (props) => {
               style={{ position: "absolute", left: 12, top: 10 }}
               onPress={() => setCategoryModalVisible(false)}
             >
-              Close
+              Đóng
             </Text>
-            <Text>Select Category</Text>
+            <Text>Chọn loại chi tiêu</Text>
           </View>
           <ScrollView>
             <View>
@@ -216,7 +215,7 @@ const AddBudget = (props) => {
                   color: neutral,
                 }}
               >
-                All
+                Tất cả
               </Text>
               {categories?.categories.map((item, index) => {
                 if (item.type === "All") {
@@ -256,7 +255,7 @@ const AddBudget = (props) => {
                   color: frown,
                 }}
               >
-                Expenses
+                Chi tiêu
               </Text>
               {categories?.categories.map((item, index) => {
                 if (item.type === "Expense") {
@@ -306,10 +305,10 @@ const AddBudget = (props) => {
               style={{ position: "absolute", left: 0, paddingLeft: 15 }}
               onPress={() => setDateRangeModalVisible(false)}
             >
-              Close
+              Đóng
             </Text>
             <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-              Select Time Range
+              Chọn khoảng thời gian
             </Text>
           </View>
 
@@ -367,9 +366,9 @@ const AddBudget = (props) => {
               style={{ position: "absolute", left: 12, top: 10 }}
               onPress={() => setWalletModalVisible(false)}
             >
-              Close
+              Đóng
             </Text>
-            <Text>Select Wallet</Text>
+            <Text>Chọn ví</Text>
           </View>
 
           <View>

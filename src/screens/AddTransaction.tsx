@@ -96,7 +96,7 @@ const AddTransaction = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.v_header}>
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-          Add Transactions
+          Thêm giao dịch mới
         </Text>
         <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
           <TouchableOpacity
@@ -131,7 +131,7 @@ const AddTransaction = () => {
             );
             if (returnedWalletAfterTransaction.error_message) {
               return AlertPopUp(
-                "Something went wrong",
+                "Có lỗi xảy ra",
                 returnedWalletAfterTransaction.error_message
               );
             }
@@ -141,7 +141,7 @@ const AddTransaction = () => {
             );
             if (returnedTransaction.error_message) {
               return AlertPopUp(
-                "Something went wrong",
+                "Có lỗi xảy ra",
                 returnedTransaction.error_message
               );
             }
@@ -156,14 +156,14 @@ const AddTransaction = () => {
             setTransactionStatus(0);
           }}
         >
-          <Text>Save</Text>
+          <Text>Lưu</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.v_add_content}>
         <View>
           <Text style={{ paddingLeft: "10%", marginTop: 10, marginLeft: 20 }}>
-            Amount
+            Số tiền
           </Text>
           <View style={styles.v_money}>
             <View style={styles.bt_money}>
@@ -218,7 +218,7 @@ const AddTransaction = () => {
             style={{ fontSize: 15, marginLeft: 10 }}
             multiline={true}
             value={note}
-            placeholder={"Write your note"}
+            placeholder={"Ghi chú"}
             placeholderTextColor={placeholderTextColor}
             onChangeText={(text) => setNote(text)}
             maxLength={200}
@@ -248,7 +248,7 @@ const AddTransaction = () => {
             }}
           >
             <Text style={{ fontSize: 15 }}>
-              Is this a positive transaction?
+              Đây có phải là giao dịch tích cực không?
             </Text>
           </View>
           <View style={styles.statusIconContainer}>
@@ -298,9 +298,9 @@ const AddTransaction = () => {
               style={{ position: "absolute", left: 12, top: 10 }}
               onPress={() => setCategoryModalVisible(false)}
             >
-              Close
+              Đóng
             </Text>
-            <Text>Select Category</Text>
+            <Text>Lựa chọn loại chi tiêu</Text>
           </View>
           <ScrollView>
             <View>
@@ -313,7 +313,7 @@ const AddTransaction = () => {
                   color: frown,
                 }}
               >
-                Expenses
+                Chi tiêu
               </Text>
               {categories?.categories.map((item, index) => {
                 if (item.type === "Expense") {
@@ -353,7 +353,7 @@ const AddTransaction = () => {
                   color: happy,
                 }}
               >
-                Incomes
+                Thu nhập
               </Text>
               {categories?.categories.map((item, index) => {
                 if (item.type === "Income") {
@@ -425,9 +425,9 @@ const AddTransaction = () => {
               style={{ position: "absolute", left: 12, top: 10 }}
               onPress={() => setWalletModalVisible(false)}
             >
-              Close
+              Đóng
             </Text>
-            <Text>Select Wallet</Text>
+            <Text>Lựa chọn ví</Text>
           </View>
 
           <View>

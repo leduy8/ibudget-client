@@ -101,7 +101,7 @@ const Login = () => {
         <TextInput
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
-          placeholder={"Username"}
+          placeholder={"Tên đăng nhập"}
           value={username}
           onChangeText={(text) => setUsername(text)}
         ></TextInput>
@@ -112,7 +112,7 @@ const Login = () => {
           style={styles.inputField}
           placeholderTextColor={placeholderTextColor}
           secureTextEntry={visiblePassword}
-          placeholder={"Password"}
+          placeholder={"Mật khẩu"}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
@@ -139,7 +139,7 @@ const Login = () => {
 
       <TouchableOpacity style={styles.bt_login} onPress={() => onLogin()}>
         <Text style={{ color: "#fff", fontSize: 15, fontWeight: "bold" }}>
-          Login
+          Đăng nhập
         </Text>
       </TouchableOpacity>
 
@@ -147,7 +147,7 @@ const Login = () => {
         style={[styles.txt_register, { textAlign: "center" }]}
         onPress={() => navigate(Routes.Register)}
       >
-        Register
+        Đăng ký
       </Text>
       <Modal
         animationType="slide"

@@ -38,7 +38,7 @@ function getTop4AndOthers(array: Array<any>) {
   let remainArr = array.slice(4);
 
   resArr.push({
-    name: "Others",
+    name: "Khác",
     price: 0,
     legendFontColor: "#7F7F7F",
     legendFontSize: 15,
@@ -70,85 +70,85 @@ const Report = () => {
   const onGetTotalTransactionByCategory = (data) => {
     let totalExpenseByCategory: any = [
       {
-        name: "Transportation",
+        name: "Xe cộ",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Gifts & Donation",
+        name: "Quà tặng",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Food & Beverage",
+        name: "Ăn uống",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Bills",
+        name: "Hóa đơn",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Shopping",
+        name: "Mua sắm",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Friends & Lover",
+        name: "Bạn bè và gia đình",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Entertainment",
+        name: "Giải trí",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Travel",
+        name: "Du lịch",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Health & Fitness",
+        name: "Sức khỏe",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Family",
+        name: "Gia đình",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Education",
+        name: "Giáo dục",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Investment",
+        name: "Đầu tư",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Business",
+        name: "Doanh nghiệp",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Other Expense",
+        name: "Chi tiêu khác",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
@@ -157,43 +157,43 @@ const Report = () => {
 
     let totalIncomeByCategory: any = [
       {
-        name: "Salary",
+        name: "Lương",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Selling",
+        name: "Bán đồ",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Interest Money",
+        name: "Lãi suất",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Gifts",
+        name: "Quà được tặng",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Awards",
+        name: "Phần thưởng",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Funding",
+        name: "Được đầu tư",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
       },
       {
-        name: "Other Income",
+        name: "Thu nhập khác",
         price: 0,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
@@ -327,7 +327,7 @@ const Report = () => {
           <ScrollView>
             <View style={styles.pieChartContainer}>
               <Text style={[styles.pieChartText, { color: frown }]}>
-                Expense
+                Chi tiêu
               </Text>
               <PieChart
                 data={expenseByCategory}
@@ -342,7 +342,7 @@ const Report = () => {
 
             <View style={styles.pieChartContainer}>
               <Text style={[styles.pieChartText, { color: happy }]}>
-                Income
+                Thu nhập
               </Text>
               <PieChart
                 data={incomeByCategory}
@@ -365,7 +365,7 @@ const Report = () => {
                   paddingTop: 20,
                 }}
               >
-                Your budget(s) of: {timeRange.title}
+                Kế hoạch chi tiêu của: {timeRange.title}
               </Text>
               {budgetList?.budgets.length > 0 ? (
                 budgetList?.budgets.map((item, index) => (
@@ -428,7 +428,7 @@ const Report = () => {
                             + {formatCurrency(item.goal_value)} đ
                           </Text>
                           <Text style={{ color: "#777" }}>
-                            Left{" "}
+                            Còn lại{" "}
                             {formatCurrency(
                               item.goal_value - getSpentBuget(item)
                             )}{" "}
@@ -442,7 +442,7 @@ const Report = () => {
               ) : (
                 <View style={{ backgroundColor: "#fff", paddingVertical: 20 }}>
                   <Text style={{ color: "#888", textAlign: "center" }}>
-                    You don't have any budgets.
+                    Bạn không có kế hoạch chi tiêu nào.
                   </Text>
                 </View>
               )}
@@ -464,10 +464,10 @@ const Report = () => {
                   style={{ position: "absolute", left: 0, paddingLeft: 15 }}
                   onPress={() => setDateRangeModalVisible(false)}
                 >
-                  Close
+                  Đóng
                 </Text>
                 <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                  Select Time Range
+                  Chọn khoảng thời gian
                 </Text>
               </View>
 

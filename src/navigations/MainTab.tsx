@@ -59,7 +59,7 @@ const MainTab = () => {
               <Text
                 style={[styles.txt_navText, focused && { color: "#212121" }]}
               >
-                {Routes.Transactions}
+                Giao dịch
               </Text>
             </View>
           ),
@@ -84,7 +84,7 @@ const MainTab = () => {
               <Text
                 style={[styles.txt_navText, focused && { color: "#212121" }]}
               >
-                {Routes.Planning}
+                Lên kế hoạch
               </Text>
             </View>
           ),
@@ -131,7 +131,7 @@ const MainTab = () => {
               <Text
                 style={[styles.txt_navText, focused && { color: "#212121" }]}
               >
-                {Routes.Learning}
+                Học hỏi
               </Text>
             </View>
           ),
@@ -156,7 +156,7 @@ const MainTab = () => {
               <Text
                 style={[styles.txt_navText, focused && { color: "#212121" }]}
               >
-                {Routes.Account}
+                Tài khoản
               </Text>
             </View>
           ),

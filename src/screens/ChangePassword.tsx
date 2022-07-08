@@ -28,12 +28,12 @@ const ChangePassword = (props) => {
     try {
       await changePassword({ password: password }, token);
       console.log(token);
-      AlertPopUp("", "Password changed successfully!");
+      AlertPopUp("", "Thay đổi mật khẩu thành công!");
       setPassword("");
       setPassword2("");
       navigate(Routes.Account);
     } catch (error) {
-      AlertPopUp("", "Something's wrong");
+      AlertPopUp("", "Có lỗi xảy ra");
     }
   };
 
@@ -63,7 +63,7 @@ const ChangePassword = (props) => {
             onChangeText={setPassword}
             placeholderTextColor={placeholderTextColor}
             secureTextEntry={visiblePassword}
-            placeholder={"New password"}
+            placeholder={"Mật khẩu mới"}
             value={password}
           />
           <TouchableOpacity
@@ -90,7 +90,7 @@ const ChangePassword = (props) => {
             onChangeText={setPassword2}
             placeholderTextColor={placeholderTextColor}
             secureTextEntry={visibleConfirmPassword}
-            placeholder={"Confirm password"}
+            placeholder={"Nhập lại mật khẩu mới"}
             value={password2}
           />
           <TouchableOpacity
@@ -123,13 +123,10 @@ const ChangePassword = (props) => {
             textTransform: "uppercase",
             fontWeight: "700",
           }}
-          buttonName={"Change password"}
+          buttonName={"Đổi mật khẩu"}
           onPress={() => {
             if (password !== password2)
-              AlertPopUp(
-                "Invalid input",
-                "Password and confirm password must be match."
-              );
+              AlertPopUp("Nhập sai", "Cả hai trường mật khẩu phải giống nhau.");
             else onChangePassword();
           }}
         />

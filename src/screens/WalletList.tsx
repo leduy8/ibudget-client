@@ -32,7 +32,7 @@ const WalletList = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.v_header}>
-        <Text style={{ fontWeight: "bold", fontSize: 18 }}>My Wallets</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 18 }}>Ví của tôi</Text>
         <View style={{ position: "absolute", left: 0, paddingLeft: 15 }}>
           <TouchableOpacity
             style={{ backgroundColor: "#fff", padding: 8, borderRadius: 30 }}
@@ -89,8 +89,8 @@ const WalletList = (props) => {
                     onPress={() =>
                       ConfirmDialog(
                         onDeleteWallet,
-                        "Are you sure?",
-                        "Are you sure that you want to delete this wallet?",
+                        "Bạn chắc không?",
+                        "Bạn có chắc muốn xóa ví này không?",
                         item.id
                       )
                     }
